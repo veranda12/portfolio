@@ -1,6 +1,7 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Card";
+import { getDictionary, type Locale } from "@/i18n";
 
 type Service = {
   id: string;
@@ -11,10 +12,11 @@ type Service = {
 
 // Not a pricing table — a capability ledger: one tactile row per service on
 // a single surface panel, rows separated by background, not borders.
-export function Services({ services }: { services: Service[] }) {
+export function Services({ services, lang }: { services: Service[]; lang: Locale }) {
+  const t = getDictionary(lang).services;
   return (
     <Section id="services" tone="surface">
-      <SectionHeader index="005" title="Yang Saya Bangun" note="Layanan" />
+      <SectionHeader index="005" title={t.title} note={t.note} />
 
       <div className="mt-10 flex flex-col gap-3 md:mt-12">
         {services.map((s, i) => {

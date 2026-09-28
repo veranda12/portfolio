@@ -3,23 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-
-const PROJECT_TYPES = [
-  "Website perusahaan",
-  "Aplikasi bisnis / internal tool",
-  "POS / sistem operasional",
-  "Integrasi API / sistem",
-  "Integrasi pembayaran",
-  "Modernisasi sistem",
-  "Belum yakin",
-];
+import { getDictionary, type Locale } from "@/i18n";
 
 const SELECT_CHEVRON =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")";
 
-const BUDGETS = ["< Rp15 jt", "Rp15 – 50 jt", "Rp50 – 150 jt", "> Rp150 jt", "Diskusikan dulu"];
-
-export function ContactForm() {
+export function ContactForm({ lang = "id" }: { lang?: Locale }) {
+  const t = getDictionary(lang).form;
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
@@ -39,15 +29,22 @@ export function ContactForm() {
       });
       const json = await res.json();
       if (!res.ok) {
-        if (json.fieldErrors) setErrors(json.fieldErrors);
-        setMessage(json.error || "Terjadi kesalahan. Silakan coba lagi.");
+        if (json.fieldErrors) {
+          // Show field messages in the page language (server copy as fallback).
+          const localized: Record<string, string> = {};
+          for (const [k, v] of Object.entries(json.fieldErrors as Record<string, string>)) {
+            localized[k] = t.fieldErrors[k] ?? v;
+          }
+          setErrors(localized);
+        }
+        setMessage(json.fieldErrors ? t.errorCheck : t.errorGeneric);
         setStatus("error");
         return;
       }
       setStatus("sent");
       form.reset();
     } catch {
-      setMessage("Gangguan jaringan. Silakan coba lagi.");
+      setMessage(t.errorNetwork);
       setStatus("error");
     }
   }
@@ -65,19 +62,16 @@ export function ContactForm() {
         />
         <div className="flex items-center gap-3">
           <span className="status-dot" aria-hidden />
-          <p className="label-signal">Pesan diterima</p>
+          <p className="label-signal">{t.sentEyebrow}</p>
         </div>
-        <h3 className="mt-4 text-2xl font-bold text-ink">Terima kasih, saya akan menghubungi Anda.</h3>
-        <p className="mt-3 max-w-md text-ink-muted">
-          Pesan Anda sudah masuk. Saya baca sendiri satu per satu, dan biasanya balas dalam satu
-          atau dua hari kerja.
-        </p>
+        <h3 className="mt-4 text-2xl font-bold text-ink">{t.sentTitle}</h3>
+        <p className="mt-3 max-w-md text-ink-muted">{t.sentBody}</p>
         <button
           type="button"
           onClick={() => setStatus("idle")}
           className="ui-link group mt-6 text-sm"
         >
-          <span className="link-underline">Kirim lagi</span>
+          <span className="link-underline">{t.sendAgain}</span>
           <ArrowRight className="nudge-x h-4 w-4" aria-hidden />
         </button>
       </div>
@@ -86,20 +80,20 @@ export function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2" noValidate>
-      <Field label="Nama" name="name" error={errors.name} required />
-      <Field label="Perusahaan" name="company" error={errors.company} placeholder="Opsional" />
-      <Field label="Email" name="email" type="email" error={errors.email} required className="sm:col-span-2" />
+      <Field label={t.name} name="name" error={errors.name} required />
+      <Field label={t.company} name="company" error={errors.company} placeholder={t.optional} />
+      <Field label={t.email} name="email" type="email" error={errors.email} required className="sm:col-span-2" />
 
-      <Select label="Jenis proyek" name="projectType" options={PROJECT_TYPES} />
-      <Select label="Kisaran budget" name="budgetRange" options={BUDGETS} />
+      <Select label={t.projectType} name="projectType" options={t.projectTypes} placeholder={t.choose} />
+      <Select label={t.budget} name="budgetRange" options={t.budgets} placeholder={t.choose} />
 
       <div className="sm:col-span-2">
-        <FieldLabel>Pesan</FieldLabel>
+        <FieldLabel>{t.message}</FieldLabel>
         <textarea
           name="message"
           rows={5}
           required
-          placeholder="Apa yang perlu dilakukan software untuk bisnis Anda?"
+          placeholder={t.messagePlaceholder}
           aria-invalid={errors.message ? true : undefined}
           className="ui-input resize-none"
         />
@@ -107,15 +101,13 @@ export function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-xs text-[0.8125rem] leading-relaxed text-ink-muted">
-          Tanpa spam, tanpa sales funnel. Langsung masuk ke inbox saya.
-        </p>
+        <p className="max-w-xs text-[0.8125rem] leading-relaxed text-ink-muted">{t.note}</p>
         <button
           type="submit"
           disabled={status === "sending"}
           className="ui-btn ui-btn-primary group"
         >
-          {status === "sending" ? "Mengirim…" : "Kirim Pesan"}
+          {status === "sending" ? t.sending : t.send}
           <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
         </button>
       </div>
@@ -166,7 +158,17 @@ function Field({
   );
 }
 
-function Select({ label, name, options }: { label: string; name: string; options: string[] }) {
+function Select({
+  label,
+  name,
+  options,
+  placeholder,
+}: {
+  label: string;
+  name: string;
+  options: string[];
+  placeholder: string;
+}) {
   return (
     <div>
       <FieldLabel>{label}</FieldLabel>
@@ -177,7 +179,7 @@ function Select({ label, name, options }: { label: string; name: string; options
         style={{ backgroundImage: SELECT_CHEVRON }}
       >
         <option value="" disabled>
-          Pilih…
+          {placeholder}
         </option>
         {options.map((o) => (
           <option key={o} value={o}>

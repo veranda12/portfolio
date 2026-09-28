@@ -1,53 +1,17 @@
 import { Check } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Section, SectionHeader } from "@/components/ui/Section";
+import { getDictionary, type Locale } from "@/i18n";
 
-const STEPS: { no: string; title: string; body: string; time: string }[] = [
-  {
-    no: "01",
-    title: "Konsultasi",
-    body: "Kita bahas kebutuhan, tujuan bisnis, dan kondisi sekarang. Gratis dan tanpa komitmen.",
-    time: "1–2 hari",
-  },
-  {
-    no: "02",
-    title: "Proposal & Estimasi",
-    body: "Anda menerima scope yang jelas, timeline, dan estimasi biaya yang transparan sebelum mulai.",
-    time: "2–4 hari",
-  },
-  {
-    no: "03",
-    title: "Desain & Build",
-    body: "Dikerjakan bertahap dengan update rutin, sehingga Anda selalu tahu progresnya.",
-    time: "2–8 minggu",
-  },
-  {
-    no: "04",
-    title: "Uji & Launch",
-    body: "Pengujian menyeluruh, revisi, lalu go-live, plus panduan singkat memakai sistemnya.",
-    time: "Sesuai scope",
-  },
-  {
-    no: "05",
-    title: "Dukungan & Iterasi",
-    body: "Maintenance, perbaikan, dan pengembangan lanjutan setelah sistem berjalan.",
-    time: "Berkelanjutan",
-  },
-];
 
-const INCLUDES = [
-  "Kode sumber lengkap",
-  "Dokumentasi & panduan",
-  "Deployment ke server/hosting",
-  "Pelatihan singkat tim Anda",
-  "Garansi perbaikan bug",
-  "Transparan, tanpa biaya tersembunyi",
-];
 
-export function Process() {
+export function Process({ lang }: { lang: Locale }) {
+  const t = getDictionary(lang).process;
+  const STEPS = t.steps;
+  const INCLUDES = t.includes;
   return (
     <Section id="process">
-      <SectionHeader index="006" title="Cara Kerja" note="Proses" />
+      <SectionHeader index="006" title={t.title} note={t.note} />
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:mt-12 lg:grid-cols-12 lg:gap-12">
         {/* Steps as a connected timeline */}
@@ -77,7 +41,7 @@ export function Process() {
         <div className="lg:col-span-5">
           <ScrollReveal className="flex flex-col gap-4 lg:sticky lg:top-24">
             <div className="rounded-panel bg-surface p-6 shadow-card md:p-8">
-              <p className="label-signal">Yang Anda dapat</p>
+              <p className="label-signal">{t.includesTitle}</p>
               <ul className="mt-5 space-y-3.5">
                 {INCLUDES.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[0.9375rem] text-ink">
@@ -92,15 +56,13 @@ export function Process() {
 
             <div className="rounded-panel bg-surface-elevated p-6 shadow-card md:p-8">
               <p className="text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-accent-blue">
-                Biaya & waktu
+                {t.costTitle}
               </p>
+              <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted">{t.costBody}</p>
               <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted">
-                Tiap proyek beda kebutuhan, jadi biaya dan waktunya juga beda. Anda akan dapat
-                angka pastinya saat konsultasi, bukan tebak-tebakan.
-              </p>
-              <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-muted">
-                Pembayaran <span className="font-semibold text-ink">bertahap (DP + termin)</span> mengikuti
-                milestone, dengan invoice resmi.
+                {t.payBefore}
+                <span className="font-semibold text-ink">{t.payStrong}</span>
+                {t.payAfter}
               </p>
             </div>
           </ScrollReveal>

@@ -2,8 +2,8 @@ import { ArrowRight, Check } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ContactForm } from "./ContactForm";
 import { waLink } from "@/lib/whatsapp";
+import { getDictionary, type Locale } from "@/i18n";
 
-const BADGES = ["NDA-friendly", "Pembayaran bertahap (DP + termin)", "Invoice resmi", "Kode & data milik Anda"];
 
 function WhatsAppGlyph({ className }: { className?: string }) {
   return (
@@ -13,19 +13,21 @@ function WhatsAppGlyph({ className }: { className?: string }) {
   );
 }
 
-export function Contact({ settings }: { settings: Record<string, string> }) {
+export function Contact({ settings, lang }: { settings: Record<string, string>; lang: Locale }) {
+  const t = getDictionary(lang).contact;
+  const BADGES = t.badges;
   const wa = waLink(settings["contact.whatsapp"], settings["contact.whatsappText"]);
 
   const rows: [string, React.ReactNode][] = [
     [
-      "Langsung",
+      t.direct,
       <a key="mail" href={`mailto:${settings["contact.email"]}`} className="link-underline text-ink hover:text-accent-pink">
         {settings["contact.email"]}
       </a>,
     ],
-    ["Kontak", settings["site.owner"]],
-    ["Lokasi", settings["contact.location"]],
-    ["Respons", "1–2 hari kerja"],
+    [t.contact, settings["site.owner"]],
+    [t.location, settings["contact.location"]],
+    [t.response, t.responseValue],
   ];
 
   return (
@@ -35,7 +37,7 @@ export function Contact({ settings }: { settings: Record<string, string> }) {
           <ScrollReveal className="lg:col-span-5">
             <div className="flex items-center gap-2.5">
               <span className="status-dot" aria-hidden />
-              <span className="label-signal">Mulai proyek</span>
+              <span className="label-signal">{t.eyebrow}</span>
             </div>
             <h2 className="mt-5 text-section-sm text-ink md:text-[3rem] md:leading-[1.05] md:tracking-[-0.02em]">
               {settings["contact.heading"]}
@@ -51,7 +53,7 @@ export function Contact({ settings }: { settings: Record<string, string> }) {
               {wa ? (
                 <a href={wa} target="_blank" rel="noreferrer noopener" className="ui-btn ui-btn-secondary group mt-4">
                   <WhatsAppGlyph className="h-4 w-4 text-[#25D366]" />
-                  Chat via WhatsApp
+                  {t.whatsapp}
                   <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
                 </a>
               ) : null}
@@ -82,7 +84,7 @@ export function Contact({ settings }: { settings: Record<string, string> }) {
 
           <ScrollReveal className="lg:col-span-7" delay={80}>
             <div className="rounded-panel bg-panel p-6 shadow-lift md:p-10">
-              <ContactForm />
+              <ContactForm lang={lang} />
             </div>
           </ScrollReveal>
         </div>

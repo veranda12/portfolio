@@ -4,19 +4,20 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { getSocialLinks } from "@/lib/queries";
 import { getSettings } from "@/lib/content";
 import { Boop } from "@/components/motion/Boop";
-
-const INDEX_LINKS = [
-  { href: "/#work", label: "Karya" },
-  { href: "/capabilities", label: "Kapabilitas" },
-  { href: "/#about", label: "Tentang" },
-  { href: "/work", label: "Semua Proyek" },
-];
+import { getDictionary, lp, type Locale } from "@/i18n";
 
 // Sky footer: page-coloured clouds hang over a soft sky gradient, with a
 // second cloud layer peeking out behind and low clouds drifting in at the
 // bottom-left. All colours come from theme tokens (see globals.css).
-export async function SiteFooter() {
-  const [social, settings] = await Promise.all([getSocialLinks(), getSettings()]);
+export async function SiteFooter({ lang }: { lang: Locale }) {
+  const [social, settings] = await Promise.all([getSocialLinks(), getSettings(lang)]);
+  const t = getDictionary(lang);
+  const INDEX_LINKS = [
+    { href: "/#work", label: t.nav.work },
+    { href: "/capabilities", label: t.nav.capabilities },
+    { href: "/#about", label: t.nav.about },
+    { href: "/work", label: t.footer.allProjects },
+  ];
   const year = new Date().getFullYear();
 
   return (
@@ -48,7 +49,7 @@ export async function SiteFooter() {
           {/* Brand + repeated contact CTA */}
           <div className="md:col-span-6 lg:col-span-5">
             <Link
-              href="/"
+              href={lp(lang, "/")}
               className="text-[1.625rem] font-bold tracking-tight text-[var(--footer-brand)] transition-opacity duration-150 hover:opacity-80"
             >
               {settings["site.name"]}
@@ -62,8 +63,8 @@ export async function SiteFooter() {
               <p className="mt-1 text-[1.375rem] font-bold leading-snug tracking-[-0.01em]">
                 {settings["contact.heading"]}
               </p>
-              <Link href="/#contact" className="ui-btn ui-btn-primary group mt-5">
-                Mulai Proyek
+              <Link href={lp(lang, "/#contact")} className="ui-btn ui-btn-primary group mt-5">
+                {t.common.startProject}
                 <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
               </Link>
             </div>
@@ -73,7 +74,7 @@ export async function SiteFooter() {
           <div className="grid grid-cols-2 gap-8 md:col-span-6 md:pt-2 lg:col-span-6 lg:col-start-7 lg:justify-items-end">
             <div>
               <p className="mb-4 text-[0.8125rem] font-semibold uppercase tracking-[0.05em] text-[var(--footer-muted)]">
-                Terhubung
+                {t.footer.connect}
               </p>
               <ul className="space-y-3">
                 {social.map((s) => (
@@ -97,12 +98,12 @@ export async function SiteFooter() {
 
             <div className="lg:text-right">
               <p className="mb-4 text-[0.8125rem] font-semibold uppercase tracking-[0.05em] text-[var(--footer-muted)]">
-                Indeks
+                {t.footer.index}
               </p>
               <ul className="space-y-3 text-[0.9375rem]">
                 {INDEX_LINKS.map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href} className="transition-colors duration-150 hover:text-[var(--footer-brand)]">
+                    <Link href={lp(lang, l.href)} className="transition-colors duration-150 hover:text-[var(--footer-brand)]">
                       {l.label}
                     </Link>
                   </li>

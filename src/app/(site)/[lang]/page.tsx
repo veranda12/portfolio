@@ -15,14 +15,17 @@ import {
   getTechnologiesByCategory,
 } from "@/lib/queries";
 import { getSettings } from "@/lib/content";
+import { translationMap } from "@/lib/translations";
 import { prisma } from "@/lib/db";
+import type { Locale } from "@/i18n";
 
-export default async function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
   const [projects, services, techGroups, settings] = await Promise.all([
-    getPublishedProjects(),
-    getServices(),
+    getPublishedProjects(lang),
+    getServices(lang),
     getTechnologiesByCategory(),
-    getSettings(),
+    getSettings(lang),
   ]);
 
   const flagship =
@@ -34,6 +37,9 @@ export default async function HomePage() {
       where: { published: true, architectureText: { not: "" } },
       select: { slug: true, title: true, architectureText: true },
     }));
+  const flagshipTitle = flagship
+    ? (await translationMap([flagship.title], lang)).get(flagship.title) ?? flagship.title
+    : "";
 
   const years =
     projects.length > 0
@@ -42,23 +48,24 @@ export default async function HomePage() {
 
   return (
     <>
-      <Hero settings={settings} stats={{ projects: projects.length, years }} />
-      <Audiences />
-      <SelectedWork projects={projects} />
+      <Hero settings={settings} stats={{ projects: projects.length, years }} lang={lang} />
+      <Audiences lang={lang} />
+      <SelectedWork projects={projects} lang={lang} />
       {flagship?.architectureText ? (
         <SystemsShowcase
           architectureText={flagship.architectureText}
           slug={flagship.slug}
-          title={flagship.title}
+          title={flagshipTitle}
+          lang={lang}
         />
       ) : null}
-      <Services services={services} />
-      <Process />
-      <Trust />
-      <About settings={settings} />
-      <TechStack groups={techGroups} />
-      <Faq />
-      <Contact settings={settings} />
+      <Services services={services} lang={lang} />
+      <Process lang={lang} />
+      <Trust lang={lang} />
+      <About settings={settings} lang={lang} />
+      <TechStack groups={techGroups} lang={lang} />
+      <Faq lang={lang} />
+      <Contact settings={settings} lang={lang} />
     </>
   );
 }

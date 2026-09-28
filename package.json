@@ -18,7 +18,10 @@
     "db:studio": "prisma studio",
     "setup": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts",
     "blob:migrate": "tsx scripts/migrate-uploads-to-blob.ts",
-    "blob:migrate:check": "tsx scripts/migrate-uploads-to-blob.ts --dry"
+    "blob:migrate:check": "tsx scripts/migrate-uploads-to-blob.ts --dry",
+    "admin:list": "tsx scripts/admin-user.ts --list",
+    "admin:user": "tsx scripts/admin-user.ts",
+    "i18n:backfill": "tsx scripts/translate-backfill.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

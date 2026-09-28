@@ -6,16 +6,18 @@ import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageSwitch } from "@/components/LanguageSwitch";
+import { getDictionary, lp, stripLocale, type Locale } from "@/i18n";
 
-const LINKS = [
-  { href: "/#work", label: "Karya" },
-  { href: "/capabilities", label: "Kapabilitas" },
-  { href: "/#about", label: "Tentang" },
-  { href: "/#stack", label: "Stack" },
-];
-
-export function SiteNav({ siteName }: { siteName: string }) {
-  const pathname = usePathname();
+export function SiteNav({ siteName, lang }: { siteName: string; lang: Locale }) {
+  const t = getDictionary(lang);
+  const LINKS = [
+    { href: "/#work", label: t.nav.work },
+    { href: "/capabilities", label: t.nav.capabilities },
+    { href: "/#about", label: t.nav.about },
+    { href: "/#stack", label: t.nav.stack },
+  ];
+  const pathname = stripLocale(usePathname() ?? "/");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -53,7 +55,7 @@ export function SiteNav({ siteName }: { siteName: string }) {
     >
       <div className="shell flex h-16 items-center justify-between md:h-[4.5rem]">
         <Link
-          href="/"
+          href={lp(lang, "/")}
           aria-label="Home"
           className="rounded-button text-[1.0625rem] font-bold tracking-tight text-ink transition-colors duration-150 hover:text-accent-pink"
         >
@@ -66,7 +68,7 @@ export function SiteNav({ siteName }: { siteName: string }) {
             return (
               <Link
                 key={l.href}
-                href={l.href}
+                href={lp(lang, l.href)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "rounded-button px-3.5 py-2 text-[0.9375rem] font-medium transition-colors duration-150",
@@ -77,19 +79,21 @@ export function SiteNav({ siteName }: { siteName: string }) {
               </Link>
             );
           })}
-          <ThemeToggle className="ml-1" />
-          <Link href="/#contact" className="ui-btn ui-btn-secondary group ml-2 px-4 py-2.5 text-sm">
+          <LanguageSwitch lang={lang} className="ml-1" />
+          <ThemeToggle lang={lang} />
+          <Link href={lp(lang, "/#contact")} className="ui-btn ui-btn-secondary group ml-2 px-4 py-2.5 text-sm">
             <span className="status-dot" aria-hidden />
-            Mulai Proyek
+            {t.common.startProject}
           </Link>
         </nav>
 
         <div className="-mr-2 flex items-center gap-1 md:hidden">
-        <ThemeToggle className="h-11 w-11" />
+        <LanguageSwitch lang={lang} className="h-11 min-w-11" />
+        <ThemeToggle lang={lang} className="h-11 w-11" />
         <button
           type="button"
           className="flex h-11 w-11 items-center justify-center rounded-button text-ink transition-colors duration-150 hover:bg-surface md:hidden"
-          aria-label={open ? "Tutup menu" : "Buka menu"}
+          aria-label={open ? t.common.closeMenu : t.common.openMenu}
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}
@@ -128,7 +132,7 @@ export function SiteNav({ siteName }: { siteName: string }) {
               {LINKS.map((l, i) => (
                 <Link
                   key={l.href}
-                  href={l.href}
+                  href={lp(lang, l.href)}
                   onClick={() => setOpen(false)}
                   className="flex items-center justify-between rounded-card px-4 py-3.5 text-lg font-semibold text-ink transition-colors duration-150 hover:bg-canvas"
                 >
@@ -137,11 +141,11 @@ export function SiteNav({ siteName }: { siteName: string }) {
                 </Link>
               ))}
               <Link
-                href="/#contact"
+                href={lp(lang, "/#contact")}
                 onClick={() => setOpen(false)}
                 className="ui-btn ui-btn-primary group m-2 mt-3 py-3.5"
               >
-                <span className="status-dot bg-canvas" aria-hidden /> Mulai Proyek
+                <span className="status-dot bg-canvas" aria-hidden /> {t.common.startProject}
                 <ArrowRight className="nudge-x h-4 w-4" aria-hidden />
               </Link>
             </nav>

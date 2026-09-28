@@ -5,46 +5,20 @@ import { Boop } from "@/components/motion/Boop";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
+import { getDictionary, type Locale } from "@/i18n";
 
-const AUDIENCES: { id: string; label: string; title: string; body: string; systems: string[] }[] = [
-  {
-    id: "RTL",
-    label: "Retail & Multi-Outlet",
-    title: "Kelola banyak cabang dari satu sistem",
-    body: "Kasir yang cepat dipakai staf, stok akurat lintas cabang, dan laporan penjualan yang bisa dilihat kapan saja dari mana saja.",
-    systems: ["POS", "Inventory", "Laporan penjualan", "Multi-outlet"],
-  },
-  {
-    id: "FNB",
-    label: "F&B, Resto & Cafe",
-    title: "Operasional dapur sampai kasir yang nyambung",
-    body: "POS terhubung ke kitchen display, QRIS, promo & voucher, integrasi marketplace, plus rekap kas per shift yang rapi.",
-    systems: ["POS + KDS", "QRIS", "GoFood / GrabFood / ShopeeFood", "Promo & shift"],
-  },
-  {
-    id: "B2B",
-    label: "B2B & Perusahaan",
-    title: "Kredibel di depan, terstruktur di belakang",
-    body: "Company profile yang meyakinkan dan bisa Anda update sendiri, plus internal tool/dashboard yang menyatukan data operasional.",
-    systems: ["Company website", "Dashboard internal", "Integrasi sistem", "SEO"],
-  },
-  {
-    id: "STP",
-    label: "Startup",
-    title: "Dari ide ke produksi, cepat",
-    body: "MVP dengan stack modern dan satu partner full-stack yang bisa menangani dari front-end sampai database dan deployment.",
-    systems: ["MVP", "Next.js / Spring Boot", "REST API", "Deployment"],
-  },
-];
+
 
 const ICONS: Record<string, LucideIcon> = { RTL: Store, FNB: UtensilsCrossed, B2B: Building2, STP: Rocket };
 // Asymmetric 2×2 bento: wide/narrow, then narrow/wide.
 const SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7"];
 
-export function Audiences() {
+export function Audiences({ lang }: { lang: Locale }) {
+  const t = getDictionary(lang).audiences;
+  const AUDIENCES = t.items;
   return (
     <Section id="audiences">
-      <SectionHeader index="002" title="Untuk Siapa" note="Industri" />
+      <SectionHeader index="002" title={t.title} note={t.note} />
 
       <div className="mt-10 grid grid-cols-1 gap-5 md:mt-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-6">
         {AUDIENCES.map((a, i) => {

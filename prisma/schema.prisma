@@ -14,6 +14,26 @@ datasource db {
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
+// --- Translations -----------------------------------------------------------
+// Machine translations (DeepL) of admin-authored Indonesian content. One row per
+// (entity, entityId, field, locale). `sourceHash` is a hash of the Indonesian
+// text it was translated from, so edits are detected and re-translated.
+
+model Translation {
+  id         String   @id @default(cuid())
+  entity     String // "project" | "capability" | "image" | "service" | "setting"
+  entityId   String // row id (or setting key)
+  field      String
+  locale     String // "en"
+  value      String   @db.Text
+  sourceHash String
+  updatedAt  DateTime @updatedAt
+
+  @@unique([entity, entityId, field, locale])
+  @@index([entity, locale])
+  @@map("translations")
+}
+
 // --- Auth -------------------------------------------------------------------
 
 model User {

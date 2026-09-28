@@ -1,15 +1,19 @@
 import { waLink } from "@/lib/whatsapp";
 import { Boop } from "@/components/motion/Boop";
+import { getDictionary, type Locale } from "@/i18n";
 
 // Floating WhatsApp entry point — high-conversion for Indonesian business
 // clients. Renders nothing until a number is configured in admin › Site content.
 export function FloatingWhatsApp({
   number,
   text,
+  lang = "id",
 }: {
   number?: string;
   text?: string;
+  lang?: Locale;
 }) {
+  const t = getDictionary(lang).common;
   const href = waLink(number, text);
   if (!href) return null;
 
@@ -18,15 +22,15 @@ export function FloatingWhatsApp({
       href={href}
       target="_blank"
       rel="noreferrer noopener"
-      aria-label="Chat via WhatsApp"
+      aria-label={t.whatsappAria}
       data-boop
       className="ui-btn group fixed bottom-5 right-5 z-40 ui-btn-secondary rounded-full px-3.5 py-3.5 shadow-lift"
     >
       <Boop trigger="parent" rotation={14} scale={1.1}>
         <WhatsAppIcon className="squish h-5 w-5 shrink-0 text-[#25D366]" />
       </Boop>
-      <span className="max-w-0 overflow-hidden whitespace-nowrap text-[0.8125rem] font-semibold opacity-0 transition-[max-width,opacity] duration-300 [transition-timing-function:var(--spring-snappy)] group-hover:max-w-[9rem] group-hover:opacity-100 group-focus-visible:max-w-[9rem] group-focus-visible:opacity-100">
-        Chat WhatsApp
+      <span className="max-w-0 overflow-hidden whitespace-nowrap text-[0.8125rem] font-semibold opacity-0 transition-[max-width,opacity] duration-300 [transition-timing-function:var(--spring-snappy)] group-hover:max-w-[11rem] group-hover:opacity-100 group-focus-visible:max-w-[11rem] group-focus-visible:opacity-100">
+        {t.whatsappShort}
       </span>
     </a>
   );

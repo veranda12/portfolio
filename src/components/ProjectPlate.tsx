@@ -17,6 +17,7 @@ export function ProjectPlate({
   priority = false,
   overlay = true,
   sizes = "(max-width: 768px) 100vw, 66vw",
+  overlayLabel = "Lihat Proyek",
 }: {
   title: string;
   index: number;
@@ -28,6 +29,7 @@ export function ProjectPlate({
   priority?: boolean;
   overlay?: boolean;
   sizes?: string;
+  overlayLabel?: string;
 }) {
   if (image) {
     return (
@@ -40,7 +42,7 @@ export function ProjectPlate({
           className="object-cover transition-transform duration-500 [transition-timing-function:var(--spring-snappy)] group-hover:scale-[1.03]"
           priority={priority}
         />
-        {overlay ? <HoverOverlay /> : null}
+        {overlay ? <HoverOverlay label={overlayLabel} /> : null}
       </div>
     );
   }
@@ -76,19 +78,19 @@ export function ProjectPlate({
           <span key={t}>{t}</span>
         ))}
       </div>
-      {overlay ? <HoverOverlay /> : null}
+      {overlay ? <HoverOverlay label={overlayLabel} /> : null}
     </div>
   );
 }
 
-function HoverOverlay() {
+function HoverOverlay({ label }: { label: string }) {
   return (
     <div
       className="pointer-events-none absolute inset-0 flex items-end justify-end p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       aria-hidden
     >
       <span className="inline-flex translate-y-2 items-center gap-1.5 rounded-button bg-ink px-3.5 py-2 text-[0.8125rem] font-semibold text-canvas shadow-lift transition-transform duration-500 [transition-timing-function:var(--spring-snappy)] group-hover:translate-y-0">
-        Lihat Proyek
+        {label}
         <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
       </span>
     </div>

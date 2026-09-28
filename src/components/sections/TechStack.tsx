@@ -5,15 +5,10 @@ import { Boop } from "@/components/motion/Boop";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
+import { getDictionary, type Locale } from "@/i18n";
 
 type Group = { category: string; items: string[] };
 
-const CAPTIONS: Record<string, string> = {
-  Application: "Tempat logika bisnis dan antarmuka berjalan",
-  Data: "Tempat sumber kebenaran disimpan",
-  Integration: "Bagaimana sistem saling berkomunikasi",
-  Infrastructure: "Tempat semuanya berjalan di produksi",
-};
 
 const ICONS: Record<string, LucideIcon> = {
   Application: Layers,
@@ -24,10 +19,12 @@ const ICONS: Record<string, LucideIcon> = {
 const SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7"];
 
 // Grouped by capability, not a logo wall. Secondary to the work.
-export function TechStack({ groups }: { groups: Group[] }) {
+export function TechStack({ groups, lang }: { groups: Group[]; lang: Locale }) {
+  const t = getDictionary(lang).stack;
+  const CAPTIONS = t.captions;
   return (
     <Section id="stack">
-      <SectionHeader index="009" title="Stack" note="Dikelompokkan per kapabilitas" />
+      <SectionHeader index="009" title={t.title} note={t.note} />
 
       <div className="mt-10 grid grid-cols-1 gap-4 md:mt-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
         {groups.map((g, i) => {

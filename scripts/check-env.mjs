@@ -2,7 +2,7 @@
 // (never their values) and fails fast with a clear message if any is empty,
 // instead of a cryptic Prisma/Next error halfway through the build.
 const required = ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "AUTH_SECRET", "STORAGE_DRIVER", "BLOB_READ_WRITE_TOKEN"];
-const optional = ["NEXT_PUBLIC_SITE_URL"];
+const optional = ["NEXT_PUBLIC_SITE_URL", "DEEPL_API_KEY"];
 
 const env = process.env.VERCEL_ENV || "local";
 const branch = process.env.VERCEL_GIT_COMMIT_REF || "-";

@@ -7,19 +7,19 @@ import { Tag } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
 import { Sparkles } from "@/components/motion/Sparkles";
 import { getPublishedProjects } from "@/lib/queries";
-import {
-  CAPABILITY_GROUPS,
-  TECHNIQUES,
-  EXPERIENCE,
-  EDUCATION,
-  TECH_INDEX,
-} from "@/data/capabilities";
+import * as dataId from "@/data/capabilities";
+import * as dataEn from "@/data/capabilities.en";
+import { getDictionary, lp, type Locale } from "@/i18n";
 
-export const metadata: Metadata = {
-  title: "Kapabilitas",
-  description:
-    "Yang saya kerjakan, yang sudah saya bangun, dan bagaimana saya mendekati software backend, database, dan integrasi sistem bisnis.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const t = getDictionary(lang).meta;
+  return {
+    title: t.capabilitiesTitle,
+    description: t.capabilitiesDescription,
+    alternates: { canonical: lp(lang, "/capabilities"), languages: { id: "/capabilities", en: "/en/capabilities" } },
+  };
+}
 
 // Bento rhythms (repeat if the data grows). Order is never changed.
 const GROUP_SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-6", "lg:col-span-6", "lg:col-span-7", "lg:col-span-5"];
@@ -34,8 +34,11 @@ function RelatedLink({ href, children }: { href: string; children: React.ReactNo
   );
 }
 
-export default async function CapabilitiesPage() {
-  const projects = await getPublishedProjects();
+export default async function CapabilitiesPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  const t = getDictionary(lang).capabilitiesPage;
+  const { CAPABILITY_GROUPS, TECHNIQUES, EXPERIENCE, EDUCATION, TECH_INDEX } = lang === "en" ? dataEn : dataId;
+  const projects = await getPublishedProjects(lang);
   const titleBySlug = new Map(projects.map((p) => [p.slug, p.title]));
 
   let n = 0;
@@ -48,38 +51,38 @@ export default async function CapabilitiesPage() {
         <div className="pointer-events-none absolute -right-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-surface/60" aria-hidden />
         <div className="shell relative pb-12 pt-6 md:pb-20 md:pt-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="label-signal">Kapabilitas</span>
-            <span className="label">Profil teknis</span>
+            <span className="label-signal">{t.eyebrow}</span>
+            <span className="label">{t.profile}</span>
           </div>
 
           <div className="grid grid-cols-1 gap-10 pt-12 md:pt-16 lg:grid-cols-12">
             <div className="lg:col-span-8">
               <h1 className="text-hero-sm text-ink md:text-[3.25rem] lg:text-hero">
-                Yang saya kerjakan,
+                {t.h1Line1}
                 <br />
-                yang sudah saya <span className="text-accent-pink">
-                  <Sparkles>bangun</Sparkles>
-                </span>.
+                {t.h1Line2Before}
+                <span className="text-accent-pink">
+                  <Sparkles>{t.h1Highlight}</Sparkles>
+                </span>
+                {t.h1Line2After}
               </h1>
               <p className="mt-6 max-w-xl text-body text-ink-muted md:text-[1.25rem] md:leading-[1.6]">
-                Halaman ini bukan resume versi lain. Isinya hal-hal yang memang pernah saya kerjakan
-                di proyek nyata, termasuk bagaimana saya pakai teknologinya untuk menyelesaikan
-                masalah, bukan sekadar daftar skill full-stack yang panjang.
+                {t.intro}
               </p>
             </div>
             <div className="lg:col-span-4 lg:self-end">
               <dl className="w-full divide-y divide-line rounded-card bg-surface px-5 shadow-card">
                 <div className="flex items-baseline justify-between gap-4 py-3.5">
-                  <dt className="label">Peran saat ini</dt>
-                  <dd className="text-right text-[0.9375rem] font-semibold text-ink">Fullstack Developer</dd>
+                  <dt className="label">{t.currentRole}</dt>
+                  <dd className="text-right text-[0.9375rem] font-semibold text-ink">{t.currentRoleValue}</dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-4 py-3.5">
-                  <dt className="label">Sejak</dt>
+                  <dt className="label">{t.since}</dt>
                   <dd className="text-right text-[0.9375rem] font-semibold text-ink">2021</dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-4 py-3.5">
-                  <dt className="label">Basis</dt>
-                  <dd className="text-right text-[0.9375rem] font-semibold text-ink">Jakarta Barat</dd>
+                  <dt className="label">{t.base}</dt>
+                  <dd className="text-right text-[0.9375rem] font-semibold text-ink">{t.baseValue}</dd>
                 </div>
               </dl>
             </div>
@@ -89,7 +92,7 @@ export default async function CapabilitiesPage() {
 
       {/* Technical capabilities */}
       <Section>
-        <SectionHeader index={next()} title="Kemampuan Teknis" note="Dikelompokkan per area" />
+        <SectionHeader index={next()} title={t.groupsTitle} note={t.groupsNote} />
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:mt-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
           {CAPABILITY_GROUPS.map((g, i) => {
@@ -114,10 +117,10 @@ export default async function CapabilitiesPage() {
 
                 {related.length > 0 ? (
                   <div className="mt-auto space-y-1.5 pt-6">
-                    <p className="label">Dipakai di</p>
+                    <p className="label">{t.usedIn}</p>
                     {related.map((slug) => (
                       <div key={slug}>
-                        <RelatedLink href={`/work/${slug}`}>{titleBySlug.get(slug)}</RelatedLink>
+                        <RelatedLink href={lp(lang, `/work/${slug}`)}>{titleBySlug.get(slug)}</RelatedLink>
                       </div>
                     ))}
                   </div>
@@ -130,13 +133,12 @@ export default async function CapabilitiesPage() {
 
       {/* How I build */}
       <Section tone="surface">
-        <SectionHeader index={next()} title="Bagaimana Saya Membangun" note="Pendekatan engineering" />
+        <SectionHeader index={next()} title={t.howTitle} note={t.howNote} />
 
         <div className="mt-10 grid grid-cols-1 gap-8 md:mt-12 lg:grid-cols-12 lg:gap-12">
           <ScrollReveal className="lg:col-span-4">
             <p className="max-w-xs text-body text-ink-muted lg:sticky lg:top-24">
-              Bukan teori dari buku. Ini cara kerja yang terbentuk dari menangani sistem finance
-              dan POS yang beneran dipakai orang tiap hari.
+              {t.howIntro}
             </p>
           </ScrollReveal>
           <ol className="relative flex flex-col gap-3 lg:col-span-8">
@@ -157,7 +159,7 @@ export default async function CapabilitiesPage() {
 
       {/* Experience */}
       <Section>
-        <SectionHeader index={next()} title="Pengalaman" note="Riwayat kerja" />
+        <SectionHeader index={next()} title={t.expTitle} note={t.expNote} />
 
         <div className="mt-10 flex flex-col gap-5 md:mt-12">
           {EXPERIENCE.map((e) => {
@@ -196,9 +198,9 @@ export default async function CapabilitiesPage() {
 
                   {related.length > 0 ? (
                     <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-                      <span className="label">Terhubung ke</span>
+                      <span className="label">{t.linkedTo}</span>
                       {related.map((slug) => (
-                        <RelatedLink key={slug} href={`/work/${slug}`}>
+                        <RelatedLink key={slug} href={lp(lang, `/work/${slug}`)}>
                           {titleBySlug.get(slug)}
                         </RelatedLink>
                       ))}
@@ -211,7 +213,7 @@ export default async function CapabilitiesPage() {
 
           <ScrollReveal className="flex flex-wrap items-center justify-between gap-4 rounded-panel bg-surface-elevated p-6 shadow-card md:p-8">
             <div>
-              <p className="label">Pendidikan</p>
+              <p className="label">{t.education}</p>
               <p className="mt-2 text-[1.25rem] font-bold text-ink">{EDUCATION.institution}</p>
               <p className="mt-1 text-[0.9375rem] text-ink-muted">
                 {EDUCATION.degree} · {EDUCATION.gpa}
@@ -224,7 +226,7 @@ export default async function CapabilitiesPage() {
 
       {/* Tech index */}
       <Section id="tech-index" tone="surface">
-        <SectionHeader index={next()} title="Indeks Teknis" note="Ringkas" />
+        <SectionHeader index={next()} title={t.indexTitle} note={t.indexNote} />
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:mt-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
           {TECH_INDEX.map((g, i) => (
@@ -251,10 +253,10 @@ export default async function CapabilitiesPage() {
         <div className="shell section-y">
           <ScrollReveal className="flex flex-col items-start justify-between gap-6 rounded-panel bg-panel p-6 shadow-lift md:flex-row md:items-center md:p-10">
             <h2 className="max-w-xl text-[1.75rem] font-bold leading-tight tracking-[-0.01em] text-ink md:text-[2.25rem]">
-              Punya sistem yang cocok dengan kapabilitas ini?
+              {t.cta}
             </h2>
-            <Link href="/#contact" className="ui-btn ui-btn-primary group shrink-0">
-              Mulai Proyek
+            <Link href={lp(lang, "/#contact")} className="ui-btn ui-btn-primary group shrink-0">
+              {getDictionary(lang).common.startProject}
               <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
             </Link>
           </ScrollReveal>

@@ -1,8 +1,10 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Section, SectionHeading, Eyebrow } from "@/components/ui/Section";
 import { PrincipleKeys } from "./PrincipleKeys";
+import { getDictionary, type Locale } from "@/i18n";
 
-export function About({ settings }: { settings: Record<string, string> }) {
+export function About({ settings, lang }: { settings: Record<string, string>; lang: Locale }) {
+  const t = getDictionary(lang).about;
   const body = settings["about.body"].split("\n").filter((p) => p.trim());
   const principles = [
     settings["about.principle1"],
@@ -18,8 +20,8 @@ export function About({ settings }: { settings: Record<string, string> }) {
             008
           </span>
         }
-        title="Pendekatan"
-        note={<span className="label">Filosofi engineering</span>}
+        title={t.title}
+        note={<span className="label">{t.note}</span>}
       />
 
       <div className="mt-10 grid grid-cols-1 gap-5 md:mt-12 lg:grid-cols-12 lg:gap-6">
@@ -44,7 +46,7 @@ export function About({ settings }: { settings: Record<string, string> }) {
         {/* Principles with pressable keycaps */}
         <ScrollReveal className="flex flex-col gap-4 lg:col-span-5" delay={80}>
           <Eyebrow tone="muted" className="px-1 text-[0.8125rem] normal-case tracking-label">
-            Prinsip
+            {t.principles}
           </Eyebrow>
           <PrincipleKeys principles={principles} />
         </ScrollReveal>

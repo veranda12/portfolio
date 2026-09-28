@@ -4,20 +4,25 @@ import { Activity, ArrowRight, Globe, LayoutDashboard, Plug } from "lucide-react
 import type { LucideIcon } from "lucide-react";
 import { Boop } from "@/components/motion/Boop";
 import { Sparkles } from "@/components/motion/Sparkles";
+import { getDictionary, lp, type Locale } from "@/i18n";
 
 type HeroProps = {
   settings: Record<string, string>;
   stats: { projects: number; years: string };
+  lang: Locale;
 };
 
-const CAPABILITIES: { title: string; sub: string; icon: LucideIcon; tone: string }[] = [
-  { title: "Website", sub: "Perusahaan, B2B & landing", icon: Globe, tone: "text-accent-blue" },
-  { title: "Aplikasi bisnis", sub: "POS, inventory, dashboard", icon: LayoutDashboard, tone: "text-accent-pink" },
-  { title: "Integrasi", sub: "API, pembayaran, webhook", icon: Plug, tone: "text-accent-pink" },
-  { title: "Sistem operasional", sub: "Real-time & multi-outlet", icon: Activity, tone: "text-accent-blue" },
+// Icons/tones per capability tile; the copy comes from the dictionary.
+const CAPABILITY_STYLE: { icon: LucideIcon; tone: string }[] = [
+  { icon: Globe, tone: "text-accent-blue" },
+  { icon: LayoutDashboard, tone: "text-accent-pink" },
+  { icon: Plug, tone: "text-accent-pink" },
+  { icon: Activity, tone: "text-accent-blue" },
 ];
 
-export function Hero({ settings, stats }: HeroProps) {
+export function Hero({ settings, stats, lang }: HeroProps) {
+  const t = getDictionary(lang);
+  const CAPABILITIES = t.hero.capabilities.map((c, i) => ({ ...c, ...CAPABILITY_STYLE[i] }));
   return (
     <section className="relative overflow-hidden">
       <HeroBackdrop />
@@ -31,9 +36,9 @@ export function Hero({ settings, stats }: HeroProps) {
           </div>
           <div className="flex items-center gap-5">
             <span className="label hidden sm:inline">
-              Berlokasi di {settings["contact.location"].split(",")[0].trim()}
+              {t.hero.basedIn} {settings["contact.location"].split(",")[0].trim()}
             </span>
-            <span className="label-signal">{stats.projects.toString().padStart(2, "0")} proyek</span>
+            <span className="label-signal">{stats.projects.toString().padStart(2, "0")} {t.common.projectsCount}</span>
           </div>
         </div>
 
@@ -54,12 +59,12 @@ export function Hero({ settings, stats }: HeroProps) {
               {settings["hero.statement"]}
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href="/#work" className="ui-btn ui-btn-secondary group">
-                Lihat Karya Pilihan
+              <Link href={lp(lang, "/#work")} className="ui-btn ui-btn-secondary group">
+                {t.hero.seeWork}
                 <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
               </Link>
-              <Link href="/#contact" className="ui-btn ui-btn-primary group">
-                Mulai Proyek
+              <Link href={lp(lang, "/#contact")} className="ui-btn ui-btn-primary group">
+                {t.common.startProject}
                 <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
               </Link>
             </div>

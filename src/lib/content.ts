@@ -1,4 +1,6 @@
 import { prisma } from "./db";
+import type { Locale } from "@/i18n/config";
+import { TRANSLATABLE_SETTINGS, translationMap } from "./translations";
 
 // Editorial copy that the admin can override, with sensible defaults so the
 // public site always renders even before anything is customized.
@@ -27,7 +29,7 @@ export const SETTING_DEFAULTS = {
   "site.owner": "Deni Maulana Shobri",
   // WhatsApp: isi hanya angka (format internasional tanpa +), mis. 6281234567890.
   // Dibiarkan kosong = tombol WhatsApp tidak muncul.
-  "contact.whatsapp": "",
+  "contact.whatsapp": "082282138584",
   "contact.consultation": "Konsultasi gratis 30 menit, tanpa komitmen.",
   "contact.whatsappText":
     "Halo, saya ingin diskusi membangun sistem/website untuk bisnis saya.",
@@ -37,10 +39,21 @@ export const SETTING_DEFAULTS = {
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;
 
-export async function getSettings(): Promise<Record<string, string>> {
+export async function getSettings(locale: Locale = "id"): Promise<Record<string, string>> {
   const rows = await prisma.siteSetting.findMany();
   const map: Record<string, string> = { ...SETTING_DEFAULTS };
   for (const row of rows) map[row.key] = row.value;
+  if (locale === "id") return map;
+
+  // Overlay stored translations for the prose settings only.
+  const tm = await translationMap(
+    TRANSLATABLE_SETTINGS.map((k) => map[k]),
+    locale
+  );
+  for (const k of TRANSLATABLE_SETTINGS) {
+    const t = tm.get(map[k]);
+    if (t) map[k] = t;
+  }
   return map;
 }
 

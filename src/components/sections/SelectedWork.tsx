@@ -6,6 +6,7 @@ import { Section, SectionHeader } from "@/components/ui/Section";
 import { Tag } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
 import type { ProjectListItem } from "@/lib/queries";
+import { getDictionary, lp, type Dictionary, type Locale } from "@/i18n";
 
 // Re-exported for pages that still import it from here.
 export { SectionHeader };
@@ -65,33 +66,34 @@ function pack(projects: ProjectListItem[]): Span[] {
   return spans;
 }
 
-// Per-layout link copy, unchanged from the original variants.
-const CASE_LABEL: Record<string, string | null> = {
-  flagship: "Baca Case Study Lengkap",
-  split: "Baca Case Study",
-  standard: "Baca Case Study",
-  compact: "Case Study",
+// Per-layout link copy (dictionary key), unchanged from the original variants.
+const CASE_LABEL: Record<string, keyof Dictionary["work"] | null> = {
+  flagship: "readFull",
+  split: "read",
+  standard: "read",
+  compact: "readShort",
   horizontal: null,
 };
 
-export function SelectedWork({ projects }: { projects: ProjectListItem[] }) {
+export function SelectedWork({ projects, lang }: { projects: ProjectListItem[]; lang: Locale }) {
+  const t = getDictionary(lang);
   const spans = pack(projects);
 
   return (
     <Section id="work">
-      <SectionHeader index="003" title="Karya Pilihan" note="Proyek" />
+      <SectionHeader index="003" title={t.work.title} note={t.work.note} />
 
       <div className="mt-10 grid grid-cols-1 gap-5 md:mt-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-6">
         {projects.map((p, i) => (
           <ScrollReveal key={p.id} className={cn("flex", SPAN_CLASS[spans[i]])} delay={(i % 2) * 70}>
-            <BentoCard p={p} n={i + 1} wide={spans[i] === "full"} />
+            <BentoCard p={p} n={i + 1} wide={spans[i] === "full"} lang={lang} t={t} />
           </ScrollReveal>
         ))}
       </div>
 
       <div className="mt-12 flex justify-center">
-        <Link href="/work" className="ui-btn ui-btn-secondary group">
-          Lihat Semua Karya
+        <Link href={lp(lang, "/work")} className="ui-btn ui-btn-secondary group">
+          {t.work.seeAll}
           <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
         </Link>
       </div>
@@ -99,10 +101,23 @@ export function SelectedWork({ projects }: { projects: ProjectListItem[] }) {
   );
 }
 
-function BentoCard({ p, n, wide }: { p: ProjectListItem; n: number; wide: boolean }) {
+function BentoCard({
+  p,
+  n,
+  wide,
+  lang,
+  t,
+}: {
+  p: ProjectListItem;
+  n: number;
+  wide: boolean;
+  lang: Locale;
+  t: Dictionary;
+}) {
   const layout = p.layout in CASE_LABEL ? p.layout : "standard";
   const flagship = layout === "flagship";
-  const caseLabel = CASE_LABEL[layout];
+  const labelKey = CASE_LABEL[layout];
+  const caseLabel = labelKey ? t.work[labelKey] : null;
   const tech = techNames(p);
 
   return (
@@ -120,6 +135,7 @@ function BentoCard({ p, n, wide }: { p: ProjectListItem; n: number; wide: boolea
         image={p.featuredImage}
         priority={flagship}
         dark={layout === "compact"}
+        overlayLabel={t.common.viewProject}
         sizes={wide ? "(max-width: 1024px) 100vw, 700px" : "(max-width: 768px) 100vw, 600px"}
         className={cn(
           "w-full",
@@ -130,13 +146,13 @@ function BentoCard({ p, n, wide }: { p: ProjectListItem; n: number; wide: boolea
       <div className={cn("flex flex-1 flex-col px-2 pb-3 md:px-3", wide && "lg:col-span-5 lg:justify-center lg:py-4 lg:pr-4")}>
         <div className="flex items-center justify-between gap-4">
           <span className="text-[0.8125rem] font-semibold text-ink-muted">{String(n).padStart(2, "0")}</span>
-          {flagship ? <span className="label-signal">Unggulan</span> : null}
+          {flagship ? <span className="label-signal">{t.work.featured}</span> : null}
         </div>
         <p className="label mt-3">
           {p.projectType}, {p.year}, {p.clientType}
         </p>
         <h3 className={cn("mt-2 font-bold leading-tight tracking-[-0.01em] text-ink", wide ? "text-[1.75rem] md:text-[2rem]" : "text-[1.5rem]")}>
-          <Link href={`/work/${p.slug}`} className="stretched-link focus-visible:outline-none">
+          <Link href={lp(lang, `/work/${p.slug}`)} className="stretched-link focus-visible:outline-none">
             {p.title}
           </Link>
         </h3>
@@ -157,7 +173,7 @@ function BentoCard({ p, n, wide }: { p: ProjectListItem; n: number; wide: boolea
             </div>
           )}
           {caseLabel ? (
-            <Link href={`/work/${p.slug}`} className="ui-link relative z-10 text-[0.9375rem]">
+            <Link href={lp(lang, `/work/${p.slug}`)} className="ui-link relative z-10 text-[0.9375rem]">
               <span className="link-underline">{caseLabel}</span>
               <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
             </Link>

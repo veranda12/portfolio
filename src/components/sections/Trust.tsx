@@ -4,42 +4,19 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { Boop } from "@/components/motion/Boop";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { cn } from "@/lib/cn";
+import { getDictionary, type Locale } from "@/i18n";
 
-const ITEMS: { title: string; body: string }[] = [
-  {
-    title: "Dukungan & maintenance",
-    body: "Dukungan setelah launch, perbaikan bug, dan pengembangan lanjutan. Untuk sistem operasional, tersedia kesepakatan respons prioritas.",
-  },
-  {
-    title: "Keamanan data",
-    body: "Autentikasi aman, hashing password, backup, dan praktik keamanan standar. Kredensial & secret produksi tidak pernah disimpan di dalam kode.",
-  },
-  {
-    title: "Kerahasiaan (NDA)",
-    body: "Siap menandatangani NDA. Ide, data, dan informasi bisnis Anda dijaga kerahasiaannya.",
-  },
-  {
-    title: "Pembayaran bertahap",
-    body: "DP + termin mengikuti milestone, dengan invoice resmi. Tidak ada biaya tersembunyi.",
-  },
-  {
-    title: "Kepemilikan penuh",
-    body: "Kode sumber dan data sepenuhnya menjadi milik Anda setelah pelunasan.",
-  },
-  {
-    title: "Teknologi teruji produksi",
-    body: "Stack yang benar-benar dipakai bisnis nyata: Java, Spring Boot, Next.js, dan PostgreSQL.",
-  },
-];
 
 const ICONS: LucideIcon[] = [LifeBuoy, ShieldCheck, FileLock2, Wallet, KeyRound, Server];
 // Bento rhythm instead of a uniform 3-up grid: wide/narrow, narrow/wide, half/half.
 const SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7", "lg:col-span-6", "lg:col-span-6"];
 
-export function Trust() {
+export function Trust({ lang }: { lang: Locale }) {
+  const t = getDictionary(lang).trust;
+  const ITEMS = t.items;
   return (
     <Section id="jaminan" tone="surface">
-      <SectionHeader index="007" title="Dukungan & Jaminan" note="Cara kerja sama" />
+      <SectionHeader index="007" title={t.title} note={t.note} />
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-12 lg:grid-cols-12 lg:gap-5">
         {ITEMS.map((it, i) => {

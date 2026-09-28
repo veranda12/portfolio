@@ -5,10 +5,12 @@ import { Moon, Sun } from "lucide-react";
 import { Boop } from "@/components/motion/Boop";
 import { cn } from "@/lib/cn";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
+import { getDictionary, type Locale } from "@/i18n";
 
 // Sun/moon switch. Both icons are rendered and CSS picks the visible one
 // from html[data-theme], so server and client markup always match.
-export function ThemeToggle({ className }: { className?: string }) {
+export function ThemeToggle({ className, lang = "id" }: { className?: string; lang?: Locale }) {
+  const t = getDictionary(lang).common;
   const [light, setLight] = useState(false);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={toggle}
-      aria-label={light ? "Ganti ke mode gelap" : "Ganti ke mode terang"}
+      aria-label={light ? t.themeToDark : t.themeToLight}
       aria-pressed={light}
       data-boop
       className={cn(

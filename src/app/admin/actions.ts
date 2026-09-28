@@ -6,6 +6,14 @@ import { prisma } from "@/lib/db";
 import { login, logout, requireAdmin } from "@/lib/auth";
 import { getStorage } from "@/lib/storage";
 import { projectSchema, serviceSchema, type ProjectInput, type ServiceInput } from "@/lib/validators";
+import { TRANSLATABLE_SETTINGS, ensureTranslations } from "@/lib/translations";
+
+// Public pages live under /[lang] (Indonesian at /, English at /en), so any
+// content change revalidates the whole site layout for both languages.
+function revalidateSite() {
+  revalidatePath("/[lang]", "layout");
+  revalidatePath("/sitemap.xml");
+}
 
 // ---------------------------------------------------------------- Auth -------
 
@@ -31,15 +39,9 @@ export async function logoutAction(): Promise<void> {
 
 // ------------------------------------------------------------- Projects ------
 
-function revalidateProject(slug?: string) {
-  revalidatePath("/");
-  revalidatePath("/work");
-  // Capabilities links to projects by title; every case study lists related work.
-  revalidatePath("/capabilities");
-  revalidatePath("/work/[slug]", "page");
+function revalidateProject() {
+  revalidateSite();
   revalidatePath("/admin/projects");
-  revalidatePath("/sitemap.xml");
-  if (slug) revalidatePath(`/work/${slug}`);
 }
 
 async function upsertTechnologies(names: string[]): Promise<Map<string, string>> {
@@ -146,7 +148,28 @@ export async function saveProject(
     });
   }
 
-  revalidateProject(project.slug);
+  // English versions for the /en site (DeepL). Never blocks the save.
+  await ensureTranslations([
+    data.title,
+    data.shortDescription,
+    data.fullDescription,
+    data.category,
+    data.projectType,
+    data.clientType,
+    data.role,
+    data.businessProblem,
+    data.solution,
+    data.technicalChallenges,
+    data.technicalDecisions,
+    data.outcome,
+    data.caseStudyContent,
+    data.seoTitle,
+    data.seoDescription,
+    ...data.capabilities.flatMap((c) => [c.title, c.detail]),
+    ...data.images.map((im) => im.alt),
+  ]);
+
+  revalidateProject();
   return { ok: true, id: project.id, slug: project.slug };
 }
 
@@ -174,13 +197,13 @@ export async function deleteProject(id: string): Promise<void> {
 export async function togglePublish(id: string, next: boolean): Promise<void> {
   await requireAdmin();
   const p = await prisma.project.update({ where: { id }, data: { published: next } });
-  revalidateProject(p.slug);
+  revalidateProject();
 }
 
 export async function toggleFeature(id: string, next: boolean): Promise<void> {
   await requireAdmin();
   const p = await prisma.project.update({ where: { id }, data: { featured: next } });
-  revalidateProject(p.slug);
+  revalidateProject();
 }
 
 export async function moveProject(id: string, direction: "up" | "down"): Promise<void> {
@@ -239,7 +262,8 @@ export async function saveService(
   if (id) await prisma.service.update({ where: { id }, data });
   else await prisma.service.create({ data });
 
-  revalidatePath("/");
+  await ensureTranslations([data.title, data.summary, data.deliverables]);
+  revalidateSite();
   revalidatePath("/admin/services");
   return { ok: true };
 }
@@ -247,7 +271,7 @@ export async function saveService(
 export async function deleteService(id: string): Promise<void> {
   await requireAdmin();
   await prisma.service.delete({ where: { id } });
-  revalidatePath("/");
+  revalidateSite();
   revalidatePath("/admin/services");
 }
 
@@ -264,7 +288,9 @@ export async function updateSettings(formData: FormData): Promise<void> {
       create: { key, value: String(v) },
     });
   }
-  revalidatePath("/", "layout"); // nav + footer appear on every page
+  const translatable = new Set<string>(TRANSLATABLE_SETTINGS);
+  await ensureTranslations(entries.filter(([k]) => translatable.has(k.slice(2))).map(([, v]) => String(v)));
+  revalidateSite(); // nav + footer appear on every page
   revalidatePath("/admin/content");
 }
 
@@ -280,13 +306,13 @@ export async function saveSocialLink(formData: FormData): Promise<void> {
   if (!data.label || !data.url) return;
   if (id) await prisma.socialLink.update({ where: { id }, data });
   else await prisma.socialLink.create({ data });
-  revalidatePath("/", "layout"); // nav + footer appear on every page
+  revalidateSite(); // nav + footer appear on every page
   revalidatePath("/admin/content");
 }
 
 export async function deleteSocialLink(id: string): Promise<void> {
   await requireAdmin();
   await prisma.socialLink.delete({ where: { id } });
-  revalidatePath("/", "layout"); // nav + footer appear on every page
+  revalidateSite(); // nav + footer appear on every page
   revalidatePath("/admin/content");
 }

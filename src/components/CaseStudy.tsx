@@ -7,6 +7,7 @@ import { ProjectPlate } from "@/components/ProjectPlate";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Tag } from "@/components/ui/Card";
 import type { FullProject, ProjectListItem } from "@/lib/queries";
+import { getDictionary, lp, type Locale } from "@/i18n";
 
 function Prose({ text }: { text: string }) {
   const paras = text.split("\n").filter((p) => p.trim());
@@ -51,11 +52,14 @@ export function CaseStudy({
   project,
   related,
   index,
+  lang = "id",
 }: {
   project: FullProject;
   related: ProjectListItem[];
   index: number;
+  lang?: Locale;
 }) {
+  const t = getDictionary(lang).caseStudy;
   const tech = project.technologies.map((t) => t.technology.name);
   const gallery = project.images.filter((img) => img.kind === "gallery");
 
@@ -69,11 +73,11 @@ export function CaseStudy({
         <div className="shell pb-10 pt-6 md:pt-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Link
-              href="/work"
+              href={lp(lang, "/work")}
               className="group inline-flex items-center gap-1.5 rounded-button py-1 text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-ink-muted transition-colors duration-150 hover:text-ink"
             >
               <ArrowLeft className="nudge-back h-4 w-4" aria-hidden />
-              Indeks
+              {t.back}
             </Link>
             <span className="label-signal">PRJ-{String(index).padStart(2, "0")}</span>
           </div>
@@ -88,13 +92,13 @@ export function CaseStudy({
               <div className="mt-8 flex flex-wrap gap-3">
                 {project.demoUrl ? (
                   <a href={project.demoUrl} target="_blank" rel="noreferrer noopener" className="ui-btn ui-btn-primary group">
-                    Lihat Live
+                    {t.live}
                     <ArrowUpRight className="nudge-xy h-4 w-4" strokeWidth={2.25} aria-hidden />
                   </a>
                 ) : null}
                 {project.githubUrl ? (
                   <a href={project.githubUrl} target="_blank" rel="noreferrer noopener" className="ui-btn ui-btn-secondary group">
-                    Source
+                    {t.source}
                     <ArrowUpRight className="nudge-xy h-4 w-4" strokeWidth={2.25} aria-hidden />
                   </a>
                 ) : null}
@@ -105,10 +109,10 @@ export function CaseStudy({
             <aside className="lg:col-span-4 lg:pt-10">
               <dl className="divide-y divide-line rounded-card bg-surface px-5 shadow-card">
                 {[
-                  ["Tipe", project.projectType],
-                  ["Tahun", String(project.year)],
-                  ["Klien", project.clientType],
-                  ["Peran", project.role],
+                  [t.specType, project.projectType],
+                  [t.specYear, String(project.year)],
+                  [t.specClient, project.clientType],
+                  [t.specRole, project.role],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-baseline justify-between gap-4 py-3.5">
                     <dt className="label">{k}</dt>
@@ -139,31 +143,31 @@ export function CaseStudy({
       {/* Body blocks */}
       <div className="shell">
         {project.businessProblem ? (
-          <Block index={next()} title="Masalah Bisnis">
+          <Block index={next()} title={t.problem}>
             <Prose text={project.businessProblem} />
           </Block>
         ) : null}
 
         {project.solution ? (
-          <Block index={next()} title="Solusi">
+          <Block index={next()} title={t.solution}>
             <Prose text={project.solution} />
           </Block>
         ) : null}
 
         {project.capabilities.length > 0 ? (
-          <Block index={next()} title="Yang Bisa Dilakukan">
+          <Block index={next()} title={t.capabilities}>
             <CapabilityDemo items={project.capabilities} />
           </Block>
         ) : null}
 
         {project.architectureText || project.architectureImage ? (
-          <Block index={next()} title="Architecture">
-            {project.architectureText ? <ArchitectureDiagram text={project.architectureText} /> : null}
+          <Block index={next()} title={t.architecture}>
+            {project.architectureText ? <ArchitectureDiagram text={project.architectureText} label={getDictionary(lang).systems.diagramLabel} /> : null}
             {project.architectureImage ? (
               <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-panel bg-surface-elevated shadow-card">
                 <Image
                   src={project.architectureImage}
-                  alt={`${project.title} architecture`}
+                  alt={`${project.title} ${t.architectureAlt}`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 800px"
                   className="object-contain"
@@ -173,7 +177,7 @@ export function CaseStudy({
           </Block>
         ) : null}
 
-        <Block index={next()} title="Technology &amp; Tools">
+        <Block index={next()} title={t.tech}>
           <div className="flex flex-wrap gap-2">
             {tech.map((t) => (
               <Tag key={t} className="px-3 py-1.5 text-[0.8125rem] text-ink">
@@ -184,7 +188,7 @@ export function CaseStudy({
         </Block>
 
         {gallery.length > 0 ? (
-          <Block index={next()} title="Tampilan">
+          <Block index={next()} title={t.gallery}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {gallery.map((img) => (
                 <div key={img.id} className="relative aspect-[4/3] overflow-hidden rounded-card bg-surface-elevated shadow-card">
@@ -202,25 +206,25 @@ export function CaseStudy({
         ) : null}
 
         {project.technicalChallenges ? (
-          <Block index={next()} title="Tantangan Teknis">
+          <Block index={next()} title={t.challenges}>
             <Prose text={project.technicalChallenges} />
           </Block>
         ) : null}
 
         {project.technicalDecisions ? (
-          <Block index={next()} title="Keputusan Teknis">
+          <Block index={next()} title={t.decisions}>
             <Prose text={project.technicalDecisions} />
           </Block>
         ) : null}
 
         {project.caseStudyContent ? (
-          <Block index={next()} title="Catatan">
+          <Block index={next()} title={t.notes}>
             <Prose text={project.caseStudyContent} />
           </Block>
         ) : null}
 
         {project.outcome ? (
-          <Block index={next()} title="Hasil">
+          <Block index={next()} title={t.outcome}>
             <div className="relative overflow-hidden rounded-panel bg-surface p-6 pl-8 shadow-card md:p-8 md:pl-10">
               <span className="absolute inset-y-0 left-0 w-1.5 bg-accent-pink" aria-hidden />
               <Prose text={project.outcome} />
@@ -234,12 +238,12 @@ export function CaseStudy({
         <div className="shell section-y">
           {related.length > 0 ? (
             <>
-              <p className="label">Karya Terkait</p>
+              <p className="label">{t.related}</p>
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 {related.map((r) => (
                   <Link
                     key={r.id}
-                    href={`/work/${r.slug}`}
+                    href={lp(lang, `/work/${r.slug}`)}
                     className="ui-card ui-card-interactive group flex items-center justify-between gap-4 rounded-card bg-canvas/60 p-6 hover:bg-canvas"
                   >
                     <div>
@@ -257,10 +261,10 @@ export function CaseStudy({
 
           <div className="mt-12 flex flex-col items-start justify-between gap-6 rounded-panel bg-panel p-6 shadow-lift md:flex-row md:items-center md:p-10">
             <h2 className="max-w-xl text-[1.75rem] font-bold leading-tight tracking-[-0.01em] text-ink md:text-[2.25rem]">
-              Punya sistem seperti ini yang perlu dibangun?
+              {t.cta}
             </h2>
-            <Link href="/#contact" className="ui-btn ui-btn-primary group shrink-0">
-              Mulai Proyek
+            <Link href={lp(lang, "/#contact")} className="ui-btn ui-btn-primary group shrink-0">
+              {getDictionary(lang).common.startProject}
               <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
             </Link>
           </div>

@@ -4,35 +4,42 @@ import { ArrowRight } from "lucide-react";
 import { getPublishedProjects } from "@/lib/queries";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Tag } from "@/components/ui/Card";
+import { getDictionary, lp, type Locale } from "@/i18n";
 
-export const metadata: Metadata = {
-  title: "Karya",
-  description:
-    "Proyek pilihan: aplikasi bisnis, sistem POS & operasional, integrasi, dan platform web modern.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const t = getDictionary(lang).meta;
+  return {
+    title: t.workTitle,
+    description: t.workDescription,
+    alternates: { canonical: lp(lang, "/work"), languages: { id: "/work", en: "/en/work" } },
+  };
+}
 
 export const dynamic = "force-dynamic";
 
-export default async function WorkIndexPage() {
-  const projects = await getPublishedProjects();
+export default async function WorkIndexPage({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  const t = getDictionary(lang);
+  const projects = await getPublishedProjects(lang);
 
   return (
     <div className="shell pb-section-sm pt-8 md:pb-section md:pt-14">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <span className="inline-flex rounded-button bg-surface-elevated px-2.5 py-1 text-[0.8125rem] font-semibold uppercase text-accent-pink">
-            Indeks
+            {t.work.indexChip}
           </span>
-          <h1 className="mt-4 text-hero-sm text-ink md:text-hero">Semua Karya</h1>
+          <h1 className="mt-4 text-hero-sm text-ink md:text-hero">{t.work.indexTitle}</h1>
         </div>
-        <span className="label">{String(projects.length).padStart(2, "0")} proyek</span>
+        <span className="label">{String(projects.length).padStart(2, "0")} {t.common.projectsCount}</span>
       </div>
 
       <div className="mt-10 flex flex-col gap-3 md:mt-14">
         {projects.map((p, i) => (
           <ScrollReveal key={p.id} delay={Math.min(i, 4) * 60}>
             <Link
-              href={`/work/${p.slug}`}
+              href={lp(lang, `/work/${p.slug}`)}
               className="ui-card ui-card-interactive group grid grid-cols-1 gap-3 rounded-card bg-surface p-6 shadow-card md:grid-cols-12 md:items-center md:gap-6 md:p-7"
             >
               <span className="text-[0.8125rem] font-semibold text-accent-pink md:col-span-1">
@@ -57,7 +64,7 @@ export default async function WorkIndexPage() {
           </ScrollReveal>
         ))}
         {projects.length === 0 ? (
-          <p className="py-16 text-center text-[0.9375rem] text-ink-muted">Belum ada proyek yang dipublikasikan.</p>
+          <p className="py-16 text-center text-[0.9375rem] text-ink-muted">{t.work.empty}</p>
         ) : null}
       </div>
     </div>
