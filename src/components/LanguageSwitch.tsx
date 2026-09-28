@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 //
 // Always a full page load, not a client-side transition: each language is its
 // own root layout, so a soft navigation re-creates <html> and would drop the
-// data-theme attribute (light mode) set by the pre-paint theme script.
+// data-theme attribute (dark mode) set by the pre-paint theme script.
 export function LanguageSwitch({ lang, className }: { lang: Locale; className?: string }) {
   const t = getDictionary(lang).common;
   const other: Locale = lang === "id" ? "en" : "id";

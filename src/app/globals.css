@@ -8,7 +8,8 @@
      channels for Tailwind so opacity modifiers work.
      :root carries the light admin palette; `.theme-site` (public site
      layout wrapper) switches everything to the dark site palette, and
-     html[data-theme="light"] swaps the site to its light palette.
+     the light palette is the default; html[data-theme="dark"] (chosen with the
+     toggle and remembered in localStorage) switches back to the dark one.
      ------------------------------------------------------------------ */
   :root {
     --canvas: #0e0e10;
@@ -119,7 +120,7 @@
 
   /* Light palette — soft blue-grey canvas, white cards, near-black ink.
      Accents are deepened so small text keeps WCAG AA contrast on light. */
-  html[data-theme="light"] .theme-site {
+  html:not([data-theme="dark"]) .theme-site {
     color-scheme: light;
 
     --canvas: #eaf2fb;
@@ -178,7 +179,7 @@
     background-color: var(--canvas);
     color-scheme: dark;
   }
-  html[data-theme="light"] body:has(.theme-site) {
+  html:not([data-theme="dark"]) body:has(.theme-site) {
     background-color: #eaf2fb;
     color-scheme: light;
   }
@@ -477,13 +478,13 @@
   }
 
   /* Theme toggle: show the icon for the theme you'd switch to. */
-  .theme-icon-moon {
+  .theme-icon-sun {
     display: none;
   }
-  html[data-theme="light"] .theme-icon-sun {
+  html[data-theme="dark"] .theme-icon-moon {
     display: none;
   }
-  html[data-theme="light"] .theme-icon-moon {
+  html[data-theme="dark"] .theme-icon-sun {
     display: block;
   }
 

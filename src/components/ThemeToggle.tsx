@@ -15,7 +15,7 @@ export function ThemeSync() {
   useLayoutEffect(() => {
     try {
       const root = document.documentElement;
-      if (localStorage.getItem(THEME_STORAGE_KEY) === "light") root.dataset.theme = "light";
+      if (localStorage.getItem(THEME_STORAGE_KEY) === "dark") root.dataset.theme = "dark";
       else delete root.dataset.theme;
     } catch {}
   }, []);
@@ -26,18 +26,18 @@ export function ThemeSync() {
 // from html[data-theme], so server and client markup always match.
 export function ThemeToggle({ className, lang = "id" }: { className?: string; lang?: Locale }) {
   const t = getDictionary(lang).common;
-  const [light, setLight] = useState(false);
+  const [light, setLight] = useState(true); // light is the default theme
 
   useEffect(() => {
-    setLight(document.documentElement.dataset.theme === "light");
+    setLight(document.documentElement.dataset.theme !== "dark");
   }, []);
 
   function toggle() {
     const next = !light;
     setLight(next);
     const root = document.documentElement;
-    if (next) root.dataset.theme = "light";
-    else delete root.dataset.theme;
+    if (next) delete root.dataset.theme;
+    else root.dataset.theme = "dark";
     try {
       localStorage.setItem(THEME_STORAGE_KEY, next ? "light" : "dark");
     } catch {}
