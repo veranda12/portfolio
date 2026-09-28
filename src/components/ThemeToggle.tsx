@@ -1,11 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Boop } from "@/components/motion/Boop";
 import { cn } from "@/lib/cn";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 import { getDictionary, type Locale } from "@/i18n";
+
+// Re-applies the stored theme whenever a root layout mounts. The pre-paint
+// script in <head> covers full page loads; this covers the cases where React
+// re-creates <html> (e.g. moving between the /id and /en root layouts) and
+// the data-theme attribute would otherwise be lost.
+export function ThemeSync() {
+  useLayoutEffect(() => {
+    try {
+      const root = document.documentElement;
+      if (localStorage.getItem(THEME_STORAGE_KEY) === "light") root.dataset.theme = "light";
+      else delete root.dataset.theme;
+    } catch {}
+  }, []);
+  return null;
+}
 
 // Sun/moon switch. Both icons are rendered and CSS picks the visible one
 // from html[data-theme], so server and client markup always match.

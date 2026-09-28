@@ -2,6 +2,7 @@ import { hand, sans } from "@/lib/fonts";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { RouteProgress } from "@/components/RouteProgress";
 import { themeInitScript } from "@/lib/theme";
+import { ThemeSync } from "@/components/ThemeToggle";
 import "@/app/globals.css";
 
 // Shared <html>/<body> shell. The app has two root layouts — the public site
@@ -15,6 +16,7 @@ export function RootDocument({ lang, children }: { lang: string; children: React
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
+        <ThemeSync />
         <RouteProgress />
         <MotionProvider>{children}</MotionProvider>
       </body>

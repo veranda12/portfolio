@@ -17,6 +17,15 @@ const prisma = new PrismaClient();
 async function main() {
   if (!process.env.DEEPL_API_KEY) throw new Error("DEEPL_API_KEY is not set.");
 
+  // Say which database is being filled — the usual mistake is running this
+  // against the local DB (from .env) instead of production.
+  let host = "(from .env)";
+  try {
+    if (process.env.DATABASE_URL) host = new URL(process.env.DATABASE_URL).host;
+  } catch {}
+  const local = host === "(from .env)" || /^(localhost|127\.0\.0\.1)(:|$)/.test(host);
+  console.log(`Database: ${host}${local ? "  ← LOCAL database (set $env:DATABASE_URL for production)" : ""}`);
+
   const [projects, capabilities, images, services, settings] = await Promise.all([
     prisma.project.findMany(),
     prisma.projectCapability.findMany(),
