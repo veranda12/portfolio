@@ -27,7 +27,7 @@ export default async function ProjectPreviewPage({
 
   return (
     <div className="bg-paper text-ink">
-      <div className="sticky top-0 z-50 flex items-center justify-between bg-signal px-5 py-2 text-paper">
+      <div className="sticky top-0 z-50 flex items-center justify-between bg-signal px-5 py-2 text-white">
         <span className="font-mono text-[0.66rem] uppercase tracking-label">
           Preview — {project.published ? "published" : "draft (not public)"}
         </span>
@@ -35,7 +35,9 @@ export default async function ProjectPreviewPage({
           ← Back to editor
         </Link>
       </div>
-      <CaseStudy project={project} related={related} index={1} />
+      <div className="theme-site">
+        <CaseStudy project={project} related={related} index={1} />
+      </div>
     </div>
   );
 }

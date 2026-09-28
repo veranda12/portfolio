@@ -1,28 +1,17 @@
-import { Sora, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Caveat, Plus_Jakarta_Sans } from "next/font/google";
 
-// Combo A — "Atelier":
-//   Display : Sora            — confident, sophisticated grotesk for headlines
-//   Body    : IBM Plex Sans   — neutral, engineered, understated at 14–18px
-//   Mono    : IBM Plex Mono   — same family as the body, for technical metadata
-// Weights kept to a controlled 400 / 500 / 600 / 700 range.
-
-export const display = Sora({
+// Body + headings across the whole interface (site and admin).
+export const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-export const body = IBM_Plex_Sans({
+// Playful handwritten accent — use sparingly (max 1–2 per page).
+export const hand = Caveat({
   subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-export const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500"],
+  variable: "--font-hand",
+  weight: ["500", "700"],
   display: "swap",
 });

@@ -34,3 +34,7 @@ yarn-error.log*
 /prisma/*.db
 
 /graphify-out
+*.md
+!README.md
+/design-refs
+/.redesign

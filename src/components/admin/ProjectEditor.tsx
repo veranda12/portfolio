@@ -143,11 +143,11 @@ export function ProjectEditor({
   return (
     <div className="pb-28">
       {/* Header */}
-      <div className="flex flex-col gap-3 border-b border-console-line pb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-b border-rule pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <button
             onClick={() => router.push("/admin/projects")}
-            className="font-mono text-[0.62rem] uppercase tracking-label text-paper/40 hover:text-signal"
+            className="font-mono text-[0.62rem] uppercase tracking-label text-ink-faint hover:text-signal"
           >
             ← Projects
           </button>
@@ -159,13 +159,13 @@ export function ProjectEditor({
           <span
             className={cn(
               "px-2 py-1 font-mono text-[0.6rem] uppercase tracking-label",
-              state.published ? "bg-signal/15 text-signal" : "bg-console-2 text-paper/50"
+              state.published ? "bg-signal/15 text-signal" : "bg-surface-2 text-ink-faint"
             )}
           >
             {state.published ? "Published" : "Draft"}
           </span>
           {state.featured ? (
-            <span className="bg-paper/15 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-label text-paper">
+            <span className="bg-ink/10 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-label text-ink">
               ★ Featured
             </span>
           ) : null}
@@ -173,7 +173,7 @@ export function ProjectEditor({
       </div>
 
       {/* Tabs */}
-      <div className="mt-5 flex flex-wrap gap-1 border-b border-console-line">
+      <div className="mt-5 flex flex-wrap gap-1 border-b border-rule">
         {TABS.map((t) => (
           <button
             key={t}
@@ -181,8 +181,8 @@ export function ProjectEditor({
             className={cn(
               "border-b-2 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-label transition-colors",
               tab === t
-                ? "border-signal text-paper"
-                : "border-transparent text-paper/40 hover:text-paper/80"
+                ? "border-signal text-ink"
+                : "border-transparent text-ink-faint hover:text-ink"
             )}
           >
             {t}
@@ -298,14 +298,14 @@ export function ProjectEditor({
       </div>
 
       {/* Sticky action bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-console-line bg-console/95 backdrop-blur md:left-60">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-white/95 backdrop-blur md:left-60">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-2 px-5 py-3 md:px-10">
           {feedback ? (
-            <span className={cn("mr-auto font-mono text-xs", feedback.kind === "ok" ? "text-signal" : "text-red-400")}>
+            <span className={cn("mr-auto font-mono text-xs", feedback.kind === "ok" ? "text-signal" : "text-red-600")}>
               {feedback.msg}
             </span>
           ) : (
-            <span className="mr-auto font-mono text-[0.62rem] text-paper/30">
+            <span className="mr-auto font-mono text-[0.62rem] text-ink-faint">
               {projectId ? `ID ${projectId.slice(0, 8)}…` : "Unsaved new project"}
             </span>
           )}
@@ -313,14 +313,14 @@ export function ProjectEditor({
           <button
             onClick={() => save(false)}
             disabled={pending}
-            className="border border-console-line px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper/80 hover:border-paper/50 disabled:opacity-50"
+            className="border border-rule px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink hover:border-paper/50 disabled:opacity-50"
           >
             Save draft
           </button>
           <button
             onClick={preview}
             disabled={pending}
-            className="border border-console-line px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper/80 hover:border-paper/50 disabled:opacity-50"
+            className="border border-rule px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink hover:border-paper/50 disabled:opacity-50"
           >
             Preview
           </button>
@@ -328,7 +328,7 @@ export function ProjectEditor({
             <button
               onClick={() => save(false)}
               disabled={pending}
-              className="border border-paper/30 px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper hover:bg-console-2 disabled:opacity-50"
+              className="border border-paper/30 px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink hover:bg-surface-2 disabled:opacity-50"
             >
               Unpublish
             </button>
@@ -336,7 +336,7 @@ export function ProjectEditor({
           <button
             onClick={() => save(true)}
             disabled={pending}
-            className="bg-signal px-5 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper hover:opacity-90 disabled:opacity-50"
+            className="bg-signal px-5 py-2 font-mono text-[0.66rem] uppercase tracking-label text-white hover:opacity-90 disabled:opacity-50"
           >
             {pending ? "Working…" : state.published ? "Update" : "Publish"}
           </button>
@@ -344,7 +344,7 @@ export function ProjectEditor({
             <button
               onClick={remove}
               disabled={pending}
-              className="px-3 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper/40 hover:text-red-400 disabled:opacity-50"
+              className="px-3 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink-faint hover:text-red-600 disabled:opacity-50"
             >
               Delete
             </button>
@@ -360,14 +360,14 @@ export function ProjectEditor({
 function FieldLabel({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
     <div className="mb-2">
-      <label className="block font-mono text-[0.66rem] uppercase tracking-label text-paper/60">{children}</label>
-      {hint ? <p className="mt-1 font-mono text-[0.6rem] text-paper/30">{hint}</p> : null}
+      <label className="block font-mono text-[0.66rem] uppercase tracking-label text-ink-soft">{children}</label>
+      {hint ? <p className="mt-1 font-mono text-[0.6rem] text-ink-faint">{hint}</p> : null}
     </div>
   );
 }
 
 const inputCls =
-  "w-full border border-console-line bg-console-2 px-3 py-2.5 text-sm text-paper placeholder:text-paper/25 focus:border-signal focus:outline-none";
+  "w-full border border-rule bg-surface-2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-signal focus:outline-none";
 
 function Text({
   label,
@@ -458,16 +458,16 @@ function Toggle({
     <button
       type="button"
       onClick={() => onChange(!value)}
-      className="flex w-full items-center justify-between border border-console-line bg-console-2 px-4 py-3 text-left"
+      className="flex w-full items-center justify-between border border-rule bg-surface-2 px-4 py-3 text-left"
     >
       <span>
-        <span className="block font-mono text-xs uppercase tracking-label text-paper">{label}</span>
-        <span className="mt-0.5 block font-mono text-[0.6rem] text-paper/40">{desc}</span>
+        <span className="block font-mono text-xs uppercase tracking-label text-ink">{label}</span>
+        <span className="mt-0.5 block font-mono text-[0.6rem] text-ink-faint">{desc}</span>
       </span>
       <span
         className={cn(
           "relative h-5 w-9 shrink-0 rounded-full transition-colors",
-          value ? "bg-signal" : "bg-console-line"
+          value ? "bg-signal" : "bg-rule"
         )}
       >
         <span
@@ -504,9 +504,9 @@ function TechPicker({
       <FieldLabel hint="Click to add. New technologies are created automatically and grouped as Application (recategorize in Site content later).">
         Technologies
       </FieldLabel>
-      <div className="min-h-[3rem] flex flex-wrap gap-2 border border-console-line bg-console-2 p-3">
+      <div className="min-h-[3rem] flex flex-wrap gap-2 border border-rule bg-surface-2 p-3">
         {selected.length === 0 ? (
-          <span className="font-mono text-[0.66rem] text-paper/30">None selected</span>
+          <span className="font-mono text-[0.66rem] text-ink-faint">None selected</span>
         ) : null}
         {selected.map((t) => (
           <button
@@ -528,7 +528,7 @@ function TechPicker({
               key={t}
               type="button"
               onClick={() => add(t)}
-              className="border border-console-line px-2.5 py-1 font-mono text-[0.62rem] text-paper/50 hover:border-signal hover:text-paper"
+              className="border border-rule px-2.5 py-1 font-mono text-[0.62rem] text-ink-faint hover:border-signal hover:text-ink"
             >
               + {t}
             </button>
@@ -556,7 +556,7 @@ function TechPicker({
             add(custom);
             setCustom("");
           }}
-          className="border border-console-line px-4 font-mono text-[0.66rem] uppercase tracking-label text-paper/70 hover:border-signal"
+          className="border border-rule px-4 font-mono text-[0.66rem] uppercase tracking-label text-ink-soft hover:border-signal"
         >
           Add
         </button>
@@ -582,19 +582,19 @@ function CapabilityEditor({
       </FieldLabel>
       <div className="space-y-3">
         {value.map((c, i) => (
-          <div key={i} className="border border-console-line bg-console-2 p-3">
+          <div key={i} className="border border-rule bg-surface-2 p-3">
             <div className="flex items-center gap-2">
               <span className="font-mono text-[0.62rem] text-signal">{String(i + 1).padStart(2, "0")}</span>
               <input
                 value={c.title}
                 onChange={(e) => update(i, { title: e.target.value })}
                 placeholder="Capability title"
-                className="flex-1 border-0 bg-transparent text-sm font-semibold text-paper placeholder:text-paper/25 focus:outline-none"
+                className="flex-1 border-0 bg-transparent text-sm font-semibold text-ink placeholder:text-ink-faint focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => onChange(value.filter((_, idx) => idx !== i))}
-                className="font-mono text-[0.6rem] text-paper/40 hover:text-signal"
+                className="font-mono text-[0.6rem] text-ink-faint hover:text-signal"
               >
                 Remove
               </button>
@@ -604,7 +604,7 @@ function CapabilityEditor({
               onChange={(e) => update(i, { detail: e.target.value })}
               rows={2}
               placeholder="Detail (optional)"
-              className="mt-2 w-full resize-y border-t border-console-line bg-transparent pt-2 text-xs text-paper/70 placeholder:text-paper/25 focus:outline-none"
+              className="mt-2 w-full resize-y border-t border-rule bg-transparent pt-2 text-xs text-ink-soft placeholder:text-ink-faint focus:outline-none"
             />
           </div>
         ))}
@@ -612,7 +612,7 @@ function CapabilityEditor({
       <button
         type="button"
         onClick={() => onChange([...value, { title: "", detail: "" }])}
-        className="mt-3 border border-console-line px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper/70 hover:border-signal"
+        className="mt-3 border border-rule px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink-soft hover:border-signal"
       >
         + Add capability
       </button>
@@ -652,7 +652,7 @@ function GalleryEditor({
         {gallery.map((img, i) => {
           const globalIdx = images.indexOf(img);
           return (
-            <div key={i} className="border border-console-line bg-console-2 p-2">
+            <div key={i} className="border border-rule bg-surface-2 p-2">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image src={img.url} alt={img.alt} fill className="object-cover" sizes="200px" />
               </div>
@@ -662,12 +662,12 @@ function GalleryEditor({
                   onChange(images.map((x, idx) => (idx === globalIdx ? { ...x, alt: e.target.value } : x)))
                 }
                 placeholder="Alt text"
-                className="mt-2 w-full bg-transparent font-mono text-[0.62rem] text-paper/70 placeholder:text-paper/25 focus:outline-none"
+                className="mt-2 w-full bg-transparent font-mono text-[0.62rem] text-ink-soft placeholder:text-ink-faint focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => onChange(images.filter((_, idx) => idx !== globalIdx))}
-                className="mt-1 font-mono text-[0.6rem] text-paper/40 hover:text-signal"
+                className="mt-1 font-mono text-[0.6rem] text-ink-faint hover:text-signal"
               >
                 Remove
               </button>
@@ -675,7 +675,7 @@ function GalleryEditor({
           );
         })}
       </div>
-      <label className="mt-3 inline-block cursor-pointer border border-console-line px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper/70 hover:border-signal">
+      <label className="mt-3 inline-block cursor-pointer border border-rule px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink-soft hover:border-signal">
         {busy ? "Uploading…" : "+ Add images"}
         <input type="file" accept="image/*" multiple hidden onChange={(e) => addFiles(e.target.files)} />
       </label>

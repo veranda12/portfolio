@@ -27,8 +27,8 @@ export function MessageCard({ m }: { m: Message }) {
   return (
     <div
       className={cn(
-        "border bg-console p-5 transition-colors",
-        m.status === "unread" ? "border-signal/40" : "border-console-line",
+        "border bg-white p-5 transition-colors",
+        m.status === "unread" ? "border-signal/40" : "border-rule",
         pending && "opacity-60"
       )}
     >
@@ -36,30 +36,30 @@ export function MessageCard({ m }: { m: Message }) {
         <div>
           <div className="flex items-center gap-2">
             {m.status === "unread" ? <span className="h-1.5 w-1.5 rounded-full bg-signal" aria-hidden /> : null}
-            <h3 className="font-display text-lg font-bold text-paper">{m.name}</h3>
-            {m.company ? <span className="font-mono text-[0.66rem] text-paper/40">· {m.company}</span> : null}
+            <h3 className="font-display text-lg font-bold text-ink">{m.name}</h3>
+            {m.company ? <span className="font-mono text-[0.66rem] text-ink-faint">· {m.company}</span> : null}
           </div>
           <a href={`mailto:${m.email}`} className="font-mono text-xs text-signal hover:underline">
             {m.email}
           </a>
         </div>
-        <span className="font-mono text-[0.62rem] uppercase tracking-label text-paper/30">{date}</span>
+        <span className="font-mono text-[0.62rem] uppercase tracking-label text-ink-faint">{date}</span>
       </div>
 
       {(m.projectType || m.budgetRange) && (
         <div className="mt-3 flex flex-wrap gap-2">
           {m.projectType ? (
-            <span className="bg-console-2 px-2 py-1 font-mono text-[0.6rem] text-paper/60">{m.projectType}</span>
+            <span className="bg-surface-2 px-2 py-1 font-mono text-[0.6rem] text-ink-soft">{m.projectType}</span>
           ) : null}
           {m.budgetRange ? (
-            <span className="bg-console-2 px-2 py-1 font-mono text-[0.6rem] text-paper/60">{m.budgetRange}</span>
+            <span className="bg-surface-2 px-2 py-1 font-mono text-[0.6rem] text-ink-soft">{m.budgetRange}</span>
           ) : null}
         </div>
       )}
 
-      <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-paper/80">{m.message}</p>
+      <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink">{m.message}</p>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-console-line pt-3">
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-rule pt-3">
         {m.status !== "read" ? (
           <Action onClick={() => start(() => setMessageStatus(m.id, "read"))}>Mark read</Action>
         ) : (
@@ -72,7 +72,7 @@ export function MessageCard({ m }: { m: Message }) {
         )}
         <a
           href={`mailto:${m.email}?subject=Re: your project enquiry`}
-          className="border border-console-line px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-label text-paper/70 hover:border-signal hover:text-paper"
+          className="border border-rule px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-label text-ink-soft hover:border-signal hover:text-ink"
         >
           Reply
         </a>
@@ -80,7 +80,7 @@ export function MessageCard({ m }: { m: Message }) {
           onClick={() => {
             if (confirm("Delete this message permanently?")) start(() => deleteMessage(m.id));
           }}
-          className="ml-auto font-mono text-[0.6rem] uppercase tracking-label text-paper/30 hover:text-red-400"
+          className="ml-auto font-mono text-[0.6rem] uppercase tracking-label text-ink-faint hover:text-red-600"
         >
           Delete
         </button>
@@ -93,7 +93,7 @@ function Action({ onClick, children }: { onClick: () => void; children: React.Re
   return (
     <button
       onClick={onClick}
-      className="border border-console-line px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-label text-paper/70 hover:border-signal hover:text-paper"
+      className="border border-rule px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-label text-ink-soft hover:border-signal hover:text-ink"
     >
       {children}
     </button>

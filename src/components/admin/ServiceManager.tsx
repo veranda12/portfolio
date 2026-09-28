@@ -27,7 +27,7 @@ const empty: Service = {
 };
 
 const inputCls =
-  "w-full border border-console-line bg-console-2 px-3 py-2.5 text-sm text-paper placeholder:text-paper/25 focus:border-signal focus:outline-none";
+  "w-full border border-rule bg-surface-2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-signal focus:outline-none";
 
 export function ServiceManager({ services }: { services: Service[] }) {
   const [creating, setCreating] = useState(false);
@@ -43,7 +43,7 @@ export function ServiceManager({ services }: { services: Service[] }) {
       ) : (
         <button
           onClick={() => setCreating(true)}
-          className="border border-console-line px-4 py-3 font-mono text-[0.66rem] uppercase tracking-label text-paper/70 hover:border-signal"
+          className="border border-rule px-4 py-3 font-mono text-[0.66rem] uppercase tracking-label text-ink-soft hover:border-signal"
         >
           + Add service
         </button>
@@ -98,7 +98,7 @@ function ServiceForm({
   }
 
   return (
-    <div className={cn("border border-console-line bg-console p-4", pending && "opacity-60")}>
+    <div className={cn("border border-rule bg-white p-4", pending && "opacity-60")}>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <input
           value={s.title}
@@ -144,28 +144,28 @@ function ServiceForm({
           onClick={() => setS((v) => ({ ...v, published: !v.published }))}
           className={cn(
             "px-3 py-2 font-mono text-[0.6rem] uppercase tracking-label",
-            s.published ? "bg-signal/15 text-signal" : "bg-console-2 text-paper/40"
+            s.published ? "bg-signal/15 text-signal" : "bg-surface-2 text-ink-faint"
           )}
         >
           {s.published ? "Published" : "Hidden"}
         </button>
         {msg ? (
-          <span className={cn("font-mono text-[0.62rem]", msg.ok ? "text-signal" : "text-red-400")}>{msg.text}</span>
+          <span className={cn("font-mono text-[0.62rem]", msg.ok ? "text-signal" : "text-red-600")}>{msg.text}</span>
         ) : null}
         <div className="ml-auto flex gap-2">
           <button
             onClick={save}
             disabled={pending}
-            className="bg-signal px-4 py-2 font-mono text-[0.6rem] uppercase tracking-label text-paper hover:opacity-90"
+            className="bg-signal px-4 py-2 font-mono text-[0.6rem] uppercase tracking-label text-white hover:opacity-90"
           >
             Save
           </button>
           {isNew ? (
-            <button onClick={onDone} className="px-3 py-2 font-mono text-[0.6rem] uppercase tracking-label text-paper/40 hover:text-paper">
+            <button onClick={onDone} className="px-3 py-2 font-mono text-[0.6rem] uppercase tracking-label text-ink-faint hover:text-ink">
               Cancel
             </button>
           ) : (
-            <button onClick={remove} className="px-3 py-2 font-mono text-[0.6rem] uppercase tracking-label text-paper/40 hover:text-red-400">
+            <button onClick={remove} className="px-3 py-2 font-mono text-[0.6rem] uppercase tracking-label text-ink-faint hover:text-red-600">
               Delete
             </button>
           )}

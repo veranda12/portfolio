@@ -2,10 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
-
-// ---------------------------------------------------------------------------
-// Technologies grouped by capability (not a logo wall). Names stay in English.
-// ---------------------------------------------------------------------------
+ 
 const TECHNOLOGIES: { name: string; category: string }[] = [
   { name: "Java", category: "Application" },
   { name: "Spring Boot", category: "Application" },
@@ -22,8 +19,8 @@ const TECHNOLOGIES: { name: string; category: string }[] = [
   { name: "WebSocket", category: "Integration" },
   { name: "Payment Gateway", category: "Integration" },
   { name: "QRIS", category: "Integration" },
-  { name: "JWT", category: "Integration" },
-  { name: "JasperReports", category: "Integration" },
+  // { name: "JWT", category: "Integration" },
+  // { name: "JasperReports", category: "Integration" },
   { name: "Docker", category: "Infrastructure" },
   { name: "Linux", category: "Infrastructure" },
   { name: "Nginx", category: "Infrastructure" },
@@ -57,9 +54,7 @@ type SeedProject = {
   technologies: string[];
   capabilities: { title: string; detail: string }[];
 };
-
-// Bahasa Indonesia (utama) untuk narasi bisnis; istilah teknis & nama produk/
-// teknologi dibiarkan dalam Bahasa Inggris agar natural.
+ 
 const PROJECTS: SeedProject[] = [
   // ---------------------------------------------------------------- FLAGSHIP
   {
@@ -85,7 +80,7 @@ const PROJECTS: SeedProject[] = [
     outcome:
       "Outlet beroperasi dari satu sistem yang konsisten dengan harga, promo, dan inventory yang sama. Shift direkonsiliasi terhadap transaksi tercatat, bukan tebakan, dan kantor pusat bisa melihat aktivitas harian lintas lokasi. Integrasi pembayaran dan perangkat terbukti stabil di beban operasional nyata standar yang benar-benar penting untuk sebuah POS.",
     architectureText: [
-      "POS TERMINAL",
+      "POS CASHIER",
       "  ├── Sales & Order Entry",
       "  ├── Inventory & Stock Moves",
       "  ├── Promotion / Voucher Engine",
@@ -117,8 +112,7 @@ const PROJECTS: SeedProject[] = [
       "ActiveJDBC",
       "Flyway",
       "WebSocket",
-      "REST API",
-      "JasperReports",
+      "REST API", 
       "Nginx",
     ],
     capabilities: [
@@ -276,7 +270,7 @@ const PROJECTS: SeedProject[] = [
     businessProblem:
       "Data operasional terjebak di ekspor dan laporan manual, sehingga keputusan tertinggal dari kenyataan dan orang yang berbeda memercayai angka yang berbeda.",
     solution:
-      "API Spring Boot di atas database operasional yang memberi makan dashboard Next.js dengan tampilan berbasis peran, filter, dan angka yang mendekati real-time yang dibagikan seluruh tim.",
+      "API Spring Boot di atas database operasional yang memberi makan dashboard React.js dengan tampilan berbasis peran, filter, dan angka yang mendekati real-time yang dibagikan seluruh tim.",
     technicalChallenges:
       "Menjaga query tetap cepat seiring data bertambah, dan memastikan tiap peran melihat tepat apa yang seharusnya tidak lebih, tidak kurang.",
     technicalDecisions:
@@ -287,7 +281,7 @@ const PROJECTS: SeedProject[] = [
     published: true,
     featured: false,
     sortOrder: 3,
-    technologies: ["Spring Boot", "Java", "Next.js", "React", "TypeScript", "PostgreSQL"],
+    technologies: ["Spring Boot", "Java", "React.Js", "TypeScript", "PostgreSQL"],
     capabilities: [
       { title: "Satu sumber kebenaran bersama", detail: "Semua orang membaca angka terkini yang sama alih-alih ekspor yang berbeda-beda." },
       { title: "Akses berbasis peran", detail: "Otorisasi ditegakkan di API sehingga tiap peran hanya melihat yang seharusnya." },

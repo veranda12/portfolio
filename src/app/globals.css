@@ -3,8 +3,184 @@
 @tailwind utilities;
 
 @layer base {
+  /* ------------------------------------------------------------------
+     Design tokens (REDESIGN_BRIEF §3). Hex for direct CSS use, `-rgb`
+     channels for Tailwind so opacity modifiers work.
+     :root carries the light admin palette; `.theme-site` (public site
+     layout wrapper) switches everything to the dark site palette, and
+     html[data-theme="light"] swaps the site to its light palette.
+     ------------------------------------------------------------------ */
   :root {
-    --shell-pad: clamp(1.25rem, 5vw, 6rem);
+    --canvas: #0e0e10;
+    --surface-site: #1a1a1e;
+    --surface-elevated: #25252a;
+    --ink-site: #ffffff;
+    --ink-muted: #a0a0a8;
+    --accent-pink: #ff4f8a;
+    --accent-yellow: #ffd700;
+    --accent-blue: #6b8cff;
+    --border: #2a2a30;
+
+    --canvas-rgb: 14 14 16;
+    --surface-elevated-rgb: 37 37 42;
+    --ink-muted-rgb: 160 160 168;
+    --accent-pink-rgb: 255 79 138;
+    --accent-yellow-rgb: 255 215 0;
+    --accent-blue-rgb: 107 140 255;
+    --border-rgb: 42 42 48;
+    --panel-rgb: 37 37 42;
+    --shadow-lift: 0 1px 1px rgb(0 0 0 / 0.25), 0 4px 8px rgb(0 0 0 / 0.25), 0 16px 32px -8px rgb(0 0 0 / 0.45);
+
+    /* Light admin palette (unchanged from the original design). */
+    --surface-rgb: 248 249 250;
+    --ink-rgb: 15 23 42;
+    --paper-rgb: 248 249 250;
+    --paper-dim-rgb: 241 245 249;
+    --ink-soft-rgb: 100 116 139;
+    --ink-faint-rgb: 148 163 184;
+    --rule-rgb: 226 232 240;
+    --rule-strong-rgb: 203 213 225;
+    --signal-rgb: 93 95 239;
+    --signal-dim-rgb: 76 70 214;
+    --signal-light-rgb: 124 127 255;
+    --blue-light-rgb: 147 197 253;
+    --primary-soft-rgb: 226 241 255;
+    --surface-blue-rgb: 235 245 255;
+    --coral-rgb: 249 115 22;
+    --surface-2-rgb: 241 245 249;
+    --console-rgb: 15 23 42;
+    --console-2-rgb: 30 41 59;
+    --console-line-rgb: 51 65 85;
+    --card-bg: #ffffff;
+    --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --shadow-card-hover: 0 20px 40px -12px rgba(15, 23, 42, 0.18);
+
+    /* Spring easings sampled from a damped spring (mass 1).
+       snappy: stiffness 300 / damping 26 — tactile UI (buttons, cards).
+       bouncy: stiffness 300 / damping 10 — wobbly "boop". */
+    --spring-snappy: linear(0, 0.058, 0.187, 0.344, 0.501, 0.643, 0.755, 0.848, 0.917, 0.966, 0.997, 1.015, 1.024, 1.027, 1.026, 1.022, 1.018, 1.014, 1.01, 1.007, 1.004, 1.003, 1.001, 1, 1);
+    --spring-snappy-duration: 500ms;
+    --spring-bouncy: linear(0, 0.14, 0.462, 0.834, 1.147, 1.336, 1.386, 1.323, 1.195, 1.051, 0.934, 0.866, 0.851, 0.879, 0.93, 0.985, 1.029, 1.053, 1.057, 1.045, 1.025, 1.004, 0.988, 0.979, 0.978, 0.983, 0.991, 0.999, 1.005, 1.008, 1.008, 1.006, 1.003, 1, 0.998, 0.997, 0.997, 0.998, 0.999, 1, 1);
+    --spring-bouncy-duration: 1280ms;
+
+    --shell-pad: clamp(1rem, 4vw, 2rem);
+  }
+
+  .theme-site {
+    color-scheme: dark;
+
+    --surface-rgb: 26 26 30;
+    --ink-rgb: 255 255 255;
+
+    /* Legacy tokens aliased onto the dark palette so components that have
+       not been restyled yet still render legibly. */
+    --paper-rgb: var(--canvas-rgb);
+    --paper-dim-rgb: 26 26 30;
+    --ink-soft-rgb: var(--ink-muted-rgb);
+    --ink-faint-rgb: 138 138 147;
+    --rule-rgb: var(--border-rgb);
+    --rule-strong-rgb: 58 58 66;
+    --signal-rgb: var(--accent-pink-rgb);
+    --signal-dim-rgb: 230 60 120;
+    --signal-light-rgb: 255 128 170;
+    --blue-light-rgb: var(--accent-blue-rgb);
+    --primary-soft-rgb: var(--surface-elevated-rgb);
+    --surface-blue-rgb: 26 26 30;
+    --surface-2-rgb: var(--surface-elevated-rgb);
+    --console-rgb: var(--surface-elevated-rgb);
+    --console-2-rgb: 46 46 52;
+    --console-line-rgb: 58 58 66;
+    --card-bg: var(--surface-site);
+    --shadow-card: 0 1px 1px rgb(0 0 0 / 0.2), 0 2px 6px rgb(0 0 0 / 0.2);
+    --shadow-card-hover: 0 1px 1px rgb(0 0 0 / 0.25), 0 8px 16px rgb(0 0 0 / 0.3),
+      0 24px 40px -12px rgb(0 0 0 / 0.5);
+
+    /* Component tokens that differ per theme. */
+    --btn-secondary-bg: var(--surface-elevated);
+    --btn-secondary-hover: #2e2e34;
+    --keycap-edge: #111114;
+    --keycap-shadow: rgb(0 0 0 / 0.4);
+    --keycap-highlight: rgb(255 255 255 / 0.08);
+    --sparkle-a: #ffffff;
+    --sparkle-b: #ffc2d6;
+    --sparkle-c: #ff8fb4;
+    /* Cloud footer */
+    --sky-top: #1b1b21;
+    --sky-bottom: #16161b;
+    --cloud-back: #141418;
+    --cloud-soft: #212128;
+    --footer-ink: #ffffff;
+    --footer-muted: #a0a0a8;
+    --footer-brand: var(--accent-blue);
+
+    background-color: var(--canvas);
+    color: var(--ink-site);
+  }
+
+  /* Light palette — soft blue-grey canvas, white cards, near-black ink.
+     Accents are deepened so small text keeps WCAG AA contrast on light. */
+  html[data-theme="light"] .theme-site {
+    color-scheme: light;
+
+    --canvas: #eaf2fb;
+    --surface-site: #ffffff;
+    --surface-elevated: #e3ecf7;
+    --ink-site: #0d0f14;
+    --ink-muted: #525a69;
+    --accent-pink: #d61f69;
+    --accent-blue: #3d4ee8;
+    --border: #d5e1ee;
+
+    --canvas-rgb: 234 242 251;
+    --surface-rgb: 255 255 255;
+    --surface-elevated-rgb: 227 236 247;
+    --ink-rgb: 13 15 20;
+    --ink-muted-rgb: 82 90 105;
+    --accent-pink-rgb: 214 31 105;
+    --accent-blue-rgb: 61 78 232;
+    --border-rgb: 213 225 238;
+    --panel-rgb: 255 255 255;
+    --shadow-lift: 0 1px 2px rgb(15 23 42 / 0.06), 0 8px 16px rgb(15 23 42 / 0.06), 0 24px 48px -12px rgb(15 23 42 / 0.16);
+
+    --paper-dim-rgb: 255 255 255;
+    --ink-faint-rgb: 100 108 122;
+    --rule-strong-rgb: 195 211 228;
+    --signal-dim-rgb: 186 20 88;
+    --signal-light-rgb: 240 90 150;
+    --surface-blue-rgb: 255 255 255;
+    --console-2-rgb: 214 226 240;
+    --console-line-rgb: 195 211 228;
+    --card-bg: #ffffff;
+    --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05), 0 4px 12px rgb(15 23 42 / 0.05);
+    --shadow-card-hover: 0 1px 2px rgb(15 23 42 / 0.06), 0 10px 20px rgb(15 23 42 / 0.08),
+      0 24px 40px -16px rgb(15 23 42 / 0.2);
+
+    --btn-secondary-bg: #ffffff;
+    --btn-secondary-hover: #f3f7fc;
+    --keycap-edge: #b9c9dc;
+    --keycap-shadow: rgb(15 23 42 / 0.15);
+    --keycap-highlight: rgb(255 255 255 / 0.9);
+    --sparkle-a: #ff4f8a;
+    --sparkle-b: #6b8cff;
+    --sparkle-c: #ffb3cc;
+
+    --sky-top: #a3d5ef;
+    --sky-bottom: #84c3e6;
+    --cloud-back: #cfe7f6;
+    --cloud-soft: #b6def3;
+    --footer-ink: #0d1b26;
+    --footer-muted: #24465c;
+    --footer-brand: #3d4ee8;
+  }
+
+  /* Paint the page behind the site (overscroll, short pages) too. */
+  body:has(.theme-site) {
+    background-color: var(--canvas);
+    color-scheme: dark;
+  }
+  html[data-theme="light"] body:has(.theme-site) {
+    background-color: #eaf2fb;
+    color-scheme: light;
   }
 
   html {
@@ -31,15 +207,27 @@
     text-rendering: optimizeLegibility;
   }
 
+  .theme-site {
+    @apply text-body;
+  }
+
   ::selection {
-    background: theme("colors.signal");
-    color: theme("colors.paper");
+    background: rgb(var(--signal-rgb));
+    color: #fff;
+  }
+  .theme-site ::selection {
+    background: var(--accent-pink);
+    color: var(--canvas);
   }
 
   :focus-visible {
-    outline: 2px solid theme("colors.signal");
+    outline: 2px solid rgb(var(--signal-rgb));
     outline-offset: 2px;
-    border-radius: 1px;
+    border-radius: 2px;
+  }
+  .theme-site :focus-visible {
+    outline-color: var(--accent-blue);
+    outline-offset: 3px;
   }
 
   h1, h2, h3, h4 {
@@ -57,15 +245,28 @@
     padding-inline: var(--shell-pad);
   }
 
-  /* Monospace technical label — the recurring "spec sheet" annotation. */
-  .label {
-    @apply font-mono uppercase tracking-label text-[0.68rem] text-ink-faint;
-  }
-  .label-signal {
-    @apply font-mono uppercase tracking-label text-[0.68rem] text-signal;
+  /* Vertical rhythm for a site section: 3rem mobile → 6rem desktop. */
+  .section-y {
+    @apply py-section-sm md:py-section;
   }
 
-  /* Hairline rule used throughout the editorial grid. */
+  /* Small uppercase badge/eyebrow label — semibold, tracked out. */
+  .label {
+    @apply font-sans text-[0.72rem] font-semibold uppercase tracking-label text-ink-faint;
+  }
+  .label-signal {
+    @apply font-sans text-[0.72rem] font-semibold uppercase tracking-label text-signal;
+  }
+  .mono-meta {
+    @apply font-sans text-[0.72rem] font-medium uppercase tracking-label text-ink-faint;
+  }
+  /* Site eyebrow label: sans, semibold, lightly tracked. */
+  .theme-site .label,
+  .theme-site .label-signal,
+  .theme-site .mono-meta {
+    @apply text-[0.8125rem] tracking-[0.05em];
+  }
+
   .rule {
     @apply border-t border-rule;
   }
@@ -75,47 +276,266 @@
     background-size: 0% 1px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: background-size var(--spring-snappy-duration) var(--spring-snappy);
   }
   .link-underline:hover {
     background-size: 100% 1px;
   }
 
-  /* Status dot borrowed from the control-room language. */
   .status-dot {
     @apply inline-block h-1.5 w-1.5 rounded-full bg-signal;
-    box-shadow: 0 0 0 0 rgba(229, 67, 30, 0.6);
+    box-shadow: 0 0 0 0 rgb(var(--signal-rgb) / 0.6);
     animation: pulse-dot 2.4s ease-out infinite;
+  }
+
+  /* Shared card treatment. Admin keeps the original look; on the site the
+     card is a flat surface layered on the canvas (depth from colour, not
+     borders) with a spring lift on hover. */
+  .card-surface {
+    @apply rounded-2xl border border-rule shadow-card transition-all duration-300 ease-in-out;
+    background-color: var(--card-bg);
+  }
+  .card-hover {
+    @apply hover:-translate-y-2 hover:shadow-card-hover;
+  }
+  .theme-site .card-surface {
+    @apply rounded-card border-transparent;
+    transition-property: transform, box-shadow, background-color;
+    transition-duration: var(--spring-snappy-duration);
+    transition-timing-function: var(--spring-snappy);
+  }
+  .theme-site .card-hover:hover {
+    transform: translateY(-4px);
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full bg-surface-blue px-3 py-1 text-xs font-medium text-signal transition-colors duration-300;
+  }
+  .theme-site .chip {
+    @apply gap-1.5 rounded-button bg-surface-elevated px-2.5 py-1 text-[0.8125rem] font-medium text-ink-muted;
+  }
+
+  /* Legacy buttons (admin + not-yet-restyled site markup). */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold transition-all duration-300 ease-in-out active:scale-95;
+  }
+  .btn-primary {
+    @apply btn bg-ink text-paper shadow-card hover:-translate-y-0.5 hover:bg-signal hover:shadow-card-hover;
+  }
+  .btn-secondary {
+    @apply btn border border-rule-strong text-ink shadow-card hover:-translate-y-0.5 hover:border-ink hover:shadow-card-hover;
+    background-color: var(--card-bg);
+  }
+  .theme-site .btn,
+  .theme-site .btn-primary,
+  .theme-site .btn-secondary {
+    @apply ui-btn;
+  }
+  .theme-site .btn-primary {
+    @apply ui-btn-primary;
+  }
+  .theme-site .btn-secondary {
+    @apply ui-btn-secondary;
+  }
+
+  /* ------------------------------------------------------------------
+     Site UI primitives (used by components/ui/*).
+     Tactile button: lifts on hover, drops 2px below rest when pressed.
+     ------------------------------------------------------------------ */
+  .ui-btn {
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-button px-5 py-3 text-[0.9375rem] font-semibold leading-none;
+    transform: translateY(0);
+    transition-property: transform, box-shadow, background-color, color;
+    transition-duration: var(--spring-snappy-duration), var(--spring-snappy-duration), 150ms, 150ms;
+    transition-timing-function: var(--spring-snappy), var(--spring-snappy), linear, linear;
+    box-shadow: var(--shadow-card);
+  }
+  .ui-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .ui-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.3);
+    transition-duration: 60ms;
+  }
+  .ui-btn:disabled {
+    @apply pointer-events-none opacity-60;
+  }
+  /* Yellow is reserved for the primary call to action (dark text in both themes). */
+  .ui-btn-primary {
+    background-color: var(--accent-yellow);
+    color: #0e0e10;
+  }
+  .ui-btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: var(--ink-site);
+  }
+  .ui-btn-secondary:hover {
+    background-color: var(--btn-secondary-hover);
+  }
+  .ui-btn-ghost {
+    @apply shadow-none;
+    color: var(--ink-site);
+  }
+  .ui-btn-ghost:hover {
+    background-color: var(--surface-site);
+  }
+
+  /* Tactile card: spring lift + deeper shadow on hover. */
+  .ui-card {
+    transition-property: transform, box-shadow, background-color;
+    transition-duration: var(--spring-snappy-duration);
+    transition-timing-function: var(--spring-snappy);
+  }
+  .ui-card-interactive:hover,
+  .group:hover > .ui-card-interactive,
+  .ui-card-interactive:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .ui-card-interactive:active {
+    transform: translateY(-1px);
+    transition-duration: 80ms;
+  }
+
+  /* Makes a link's hit area cover its nearest `relative` ancestor card. */
+  .stretched-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  /* Spring nudge for arrow icons inside a hovered group (links, cards). */
+  .nudge-x {
+    transition: transform var(--spring-snappy-duration) var(--spring-snappy);
+  }
+  .group:hover .nudge-x {
+    transform: translateX(4px);
+  }
+  .nudge-back {
+    transition: transform var(--spring-snappy-duration) var(--spring-snappy);
+  }
+  .group:hover .nudge-back {
+    transform: translateX(-4px);
+  }
+  .nudge-xy {
+    transition: transform var(--spring-snappy-duration) var(--spring-snappy);
+  }
+  .group:hover .nudge-xy {
+    transform: translate(3px, -3px);
+  }
+
+  /* Icons act on press: arrows shoot further along their direction, and
+     "squish" icons get squashed like a pressed button. */
+  .group:active .nudge-x {
+    transform: translateX(9px);
+    transition-duration: 90ms;
+  }
+  .group:active .nudge-back {
+    transform: translateX(-9px);
+    transition-duration: 90ms;
+  }
+  .group:active .nudge-xy {
+    transform: translate(7px, -7px);
+    transition-duration: 90ms;
+  }
+  .squish {
+    transition: transform var(--spring-bouncy-duration) var(--spring-bouncy);
+  }
+  .group:active .squish {
+    transform: scale(1.2, 0.72);
+    transition: transform 80ms linear;
+  }
+
+  /* Text link in the site's accent colour with a growing underline. */
+  .ui-link {
+    @apply inline-flex items-center gap-1.5 font-semibold text-accent-pink;
+  }
+
+  /* Pressable keycap (About principles). */
+  .keycap {
+    background-color: var(--surface-elevated);
+    box-shadow: inset 0 1px 0 var(--keycap-highlight), 0 4px 0 var(--keycap-edge), 0 6px 10px var(--keycap-shadow);
+    transform: translateY(0);
+    transition: transform var(--spring-snappy-duration) var(--spring-snappy),
+      box-shadow var(--spring-snappy-duration) var(--spring-snappy), background-color 150ms linear;
+  }
+  .keycap:hover {
+    transform: translateY(1px);
+    box-shadow: inset 0 1px 0 var(--keycap-highlight), 0 3px 0 var(--keycap-edge), 0 4px 8px var(--keycap-shadow);
+  }
+  .keycap:active,
+  .keycap-down {
+    transform: translateY(4px);
+    box-shadow: inset 0 1px 0 var(--keycap-highlight), 0 0 0 var(--keycap-edge), 0 1px 2px var(--keycap-shadow);
+  }
+  .keycap-down {
+    background-color: var(--accent-pink);
+  }
+
+  /* Theme toggle: show the icon for the theme you'd switch to. */
+  .theme-icon-moon {
+    display: none;
+  }
+  html[data-theme="light"] .theme-icon-sun {
+    display: none;
+  }
+  html[data-theme="light"] .theme-icon-moon {
+    display: block;
+  }
+
+  /* Form controls (canvas-coloured wells inside the form panel). */
+  .ui-input {
+    @apply w-full rounded-button border border-transparent bg-canvas px-4 py-3 text-[0.9375rem] text-ink placeholder:text-ink-muted/70 focus:border-accent-blue focus:outline-none;
+    transition: border-color 150ms linear, background-color 150ms linear;
+  }
+  .ui-input[aria-invalid="true"] {
+    @apply border-accent-pink;
   }
 }
 
 @keyframes pulse-dot {
-  0% { box-shadow: 0 0 0 0 rgba(229, 67, 30, 0.5); }
-  70% { box-shadow: 0 0 0 7px rgba(229, 67, 30, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(229, 67, 30, 0); }
+  0% { box-shadow: 0 0 0 0 rgb(var(--signal-rgb) / 0.5); }
+  70% { box-shadow: 0 0 0 7px rgb(var(--signal-rgb) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--signal-rgb) / 0); }
 }
 
-/* Scroll-reveal: hidden until the ScrollReveal client wrapper marks it in view. */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
+/* Page-navigation loading bar (components/RouteProgress.tsx). */
+.route-progress {
+  background-color: var(--accent-pink);
+  transition: transform 220ms linear;
 }
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
+  /* Still show progress (it's functional), just without the sliding. */
+  .route-progress {
+    transition: none;
   }
 }
 
-/* Dotted grid used sparingly behind the flagship architecture block. */
-.blueprint {
-  background-image: radial-gradient(theme("colors.rule-strong") 1px, transparent 1px);
-  background-size: 22px 22px;
+/* Sparkles (components/motion/Sparkles.tsx): grow in, spin, shrink away. */
+.sparkle {
+  animation: sparkle-grow 700ms ease-in-out forwards;
+}
+.sparkle-star {
+  animation: sparkle-spin 1000ms linear;
+}
+@keyframes sparkle-grow {
+  0% { transform: scale(0); }
+  50% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+@keyframes sparkle-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(180deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sparkle { display: none; }
+  /* Scroll reveals (components/ScrollReveal.tsx) are decorative: show now. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

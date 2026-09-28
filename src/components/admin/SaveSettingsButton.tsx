@@ -8,7 +8,7 @@ export function SaveSettingsButton() {
     <button
       type="submit"
       disabled={pending}
-      className="bg-signal px-6 py-3 font-mono text-[0.66rem] uppercase tracking-label text-paper shadow-lg hover:opacity-90 disabled:opacity-50"
+      className="bg-signal px-6 py-3 font-mono text-[0.66rem] uppercase tracking-label text-white shadow-lg hover:opacity-90 disabled:opacity-50"
     >
       {pending ? "Saving…" : "Save all content"}
     </button>

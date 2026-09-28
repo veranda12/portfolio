@@ -1,5 +1,6 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { SectionHeader } from "@/components/sections/SelectedWork";
+import { Section, SectionHeading, Eyebrow } from "@/components/ui/Section";
+import { PrincipleKeys } from "./PrincipleKeys";
 
 export function About({ settings }: { settings: Record<string, string> }) {
   const body = settings["about.body"].split("\n").filter((p) => p.trim());
@@ -10,43 +11,44 @@ export function About({ settings }: { settings: Record<string, string> }) {
   ].filter(Boolean);
 
   return (
-    <section id="about" className="scroll-mt-16 border-b border-rule bg-ink text-paper">
-      <div className="shell py-16 md:py-24">
-        <div className="flex flex-col gap-4 border-t border-paper/30 pt-5 md:flex-row md:items-end md:justify-between">
-          <div className="flex items-baseline gap-5">
-            <span className="font-mono text-[0.68rem] uppercase tracking-label text-signal">[ 005 ]</span>
-            <h2 className="font-display text-3xl font-semibold tracking-tight md:text-5xl">Pendekatan</h2>
+    <Section id="about">
+      <SectionHeading
+        eyebrow={
+          <span className="inline-flex rounded-button bg-surface-elevated px-2.5 py-1 text-[0.8125rem] font-semibold text-accent-pink">
+            008
+          </span>
+        }
+        title="Pendekatan"
+        note={<span className="label">Filosofi engineering</span>}
+      />
+
+      <div className="mt-10 grid grid-cols-1 gap-5 md:mt-12 lg:grid-cols-12 lg:gap-6">
+        {/* Story card */}
+        <ScrollReveal className="relative overflow-hidden rounded-panel bg-surface p-6 shadow-card md:p-10 lg:col-span-7">
+          <span
+            className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-accent-blue/[0.07]"
+            aria-hidden
+          />
+          <h3 className="relative max-w-2xl text-[1.625rem] font-bold leading-snug tracking-[-0.01em] text-ink md:text-[2rem]">
+            {settings["about.heading"]}
+          </h3>
+          <div className="relative mt-6 max-w-2xl space-y-5">
+            {body.map((p, i) => (
+              <p key={i} className="text-body text-ink-muted">
+                {p}
+              </p>
+            ))}
           </div>
-          <span className="font-mono text-[0.68rem] uppercase tracking-label text-paper/50">Filosofi engineering</span>
-        </div>
+        </ScrollReveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-12">
-          <ScrollReveal className="md:col-span-7">
-            <h3 className="max-w-2xl font-display text-2xl font-semibold leading-snug md:text-4xl">
-              {settings["about.heading"]}
-            </h3>
-            <div className="mt-8 max-w-2xl space-y-5">
-              {body.map((p, i) => (
-                <p key={i} className="text-base leading-relaxed text-paper/75 md:text-lg">
-                  {p}
-                </p>
-              ))}
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal className="md:col-span-5 md:pl-8" delay={100}>
-            <p className="font-mono text-[0.68rem] uppercase tracking-label text-paper/50">Prinsip</p>
-            <ul className="mt-6 divide-y divide-paper/15 border-y border-paper/15">
-              {principles.map((p, i) => (
-                <li key={i} className="flex gap-4 py-5">
-                  <span className="font-mono text-sm text-signal">0{i + 1}</span>
-                  <span className="text-base leading-relaxed text-paper/85">{p}</span>
-                </li>
-              ))}
-            </ul>
-          </ScrollReveal>
-        </div>
+        {/* Principles with pressable keycaps */}
+        <ScrollReveal className="flex flex-col gap-4 lg:col-span-5" delay={80}>
+          <Eyebrow tone="muted" className="px-1 text-[0.8125rem] normal-case tracking-label">
+            Prinsip
+          </Eyebrow>
+          <PrincipleKeys principles={principles} />
+        </ScrollReveal>
       </div>
-    </section>
+    </Section>
   );
 }

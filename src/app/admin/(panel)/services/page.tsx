@@ -6,10 +6,10 @@ export default async function AdminServicesPage() {
 
   return (
     <div>
-      <div className="border-b border-console-line pb-6">
+      <div className="border-b border-rule pb-6">
         <p className="font-mono text-[0.66rem] uppercase tracking-label text-signal">Content</p>
         <h1 className="mt-2 font-display text-3xl font-bold">Services</h1>
-        <p className="mt-2 font-mono text-[0.66rem] text-paper/40">
+        <p className="mt-2 font-mono text-[0.66rem] text-ink-faint">
           The &ldquo;What I build&rdquo; section on the home page.
         </p>
       </div>

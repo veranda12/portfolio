@@ -8,7 +8,7 @@ import { saveSocialLink, deleteSocialLink } from "@/app/admin/actions";
 type Social = { id: string; label: string; url: string; handle: string; sortOrder: number };
 
 const inputCls =
-  "w-full border border-console-line bg-console-2 px-3 py-2 text-sm text-paper placeholder:text-paper/25 focus:border-signal focus:outline-none";
+  "w-full border border-rule bg-surface-2 px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-signal focus:outline-none";
 
 export function SocialLinksManager({ links }: { links: Social[] }) {
   const router = useRouter();
@@ -33,10 +33,10 @@ export function SocialLinksManager({ links }: { links: Social[] }) {
     <div className={cn(pending && "opacity-70")}>
       <div className="space-y-2">
         {links.map((l) => (
-          <div key={l.id} className="flex flex-wrap items-center gap-2 border border-console-line bg-console p-3">
-            <span className="font-mono text-xs text-paper">{l.label}</span>
-            <span className="font-mono text-[0.66rem] text-paper/40">{l.url}</span>
-            {l.handle ? <span className="font-mono text-[0.66rem] text-paper/30">{l.handle}</span> : null}
+          <div key={l.id} className="flex flex-wrap items-center gap-2 border border-rule bg-white p-3">
+            <span className="font-mono text-xs text-ink">{l.label}</span>
+            <span className="font-mono text-[0.66rem] text-ink-faint">{l.url}</span>
+            {l.handle ? <span className="font-mono text-[0.66rem] text-ink-faint">{l.handle}</span> : null}
             <button
               onClick={() =>
                 start(async () => {
@@ -44,7 +44,7 @@ export function SocialLinksManager({ links }: { links: Social[] }) {
                   router.refresh();
                 })
               }
-              className="ml-auto font-mono text-[0.6rem] uppercase tracking-label text-paper/40 hover:text-red-400"
+              className="ml-auto font-mono text-[0.6rem] uppercase tracking-label text-ink-faint hover:text-red-600"
             >
               Remove
             </button>
@@ -59,7 +59,7 @@ export function SocialLinksManager({ links }: { links: Social[] }) {
       </div>
       <button
         onClick={add}
-        className="mt-3 border border-console-line px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-paper/70 hover:border-signal"
+        className="mt-3 border border-rule px-4 py-2 font-mono text-[0.66rem] uppercase tracking-label text-ink-soft hover:border-signal"
       >
         + Add link
       </button>

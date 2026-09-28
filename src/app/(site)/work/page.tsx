@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { getPublishedProjects } from "@/lib/queries";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { Tag } from "@/components/ui/Card";
 
 export const metadata: Metadata = {
   title: "Karya",
@@ -15,43 +17,47 @@ export default async function WorkIndexPage() {
   const projects = await getPublishedProjects();
 
   return (
-    <div className="shell py-16 md:py-24">
-      <div className="flex flex-col gap-4 border-t border-ink pt-5 md:flex-row md:items-end md:justify-between">
-        <div className="flex items-baseline gap-5">
-          <span className="label-signal">[ Indeks ]</span>
-          <h1 className="font-display text-4xl font-semibold tracking-tight md:text-6xl">Semua Karya</h1>
+    <div className="shell pb-section-sm pt-8 md:pb-section md:pt-14">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <span className="inline-flex rounded-button bg-surface-elevated px-2.5 py-1 text-[0.8125rem] font-semibold uppercase text-accent-pink">
+            Indeks
+          </span>
+          <h1 className="mt-4 text-hero-sm text-ink md:text-hero">Semua Karya</h1>
         </div>
         <span className="label">{String(projects.length).padStart(2, "0")} proyek</span>
       </div>
 
-      <div className="mt-12 border-t border-rule">
+      <div className="mt-10 flex flex-col gap-3 md:mt-14">
         {projects.map((p, i) => (
-          <ScrollReveal key={p.id}>
+          <ScrollReveal key={p.id} delay={Math.min(i, 4) * 60}>
             <Link
               href={`/work/${p.slug}`}
-              className="group grid grid-cols-1 gap-4 border-b border-rule py-8 transition-colors hover:bg-paper-dim/50 md:grid-cols-12 md:items-baseline"
+              className="ui-card ui-card-interactive group grid grid-cols-1 gap-3 rounded-card bg-surface p-6 shadow-card md:grid-cols-12 md:items-center md:gap-6 md:p-7"
             >
-              <span className="font-mono text-sm text-signal md:col-span-1">
+              <span className="text-[0.8125rem] font-semibold text-accent-pink md:col-span-1">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div className="md:col-span-5">
-                <h2 className="font-display text-2xl font-semibold leading-tight md:text-3xl">{p.title}</h2>
-                <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-label text-ink-faint">
-                  {p.projectType} · {p.year} · {p.clientType}
+                <h2 className="text-[1.5rem] font-bold leading-tight text-ink md:text-[1.75rem]">{p.title}</h2>
+                <p className="mt-2 text-[0.8125rem] text-ink-muted">
+                  {p.projectType}, {p.year}, {p.clientType}
                 </p>
               </div>
-              <p className="text-sm leading-relaxed text-ink-soft md:col-span-4">{p.shortDescription}</p>
-              <div className="flex items-center justify-between md:col-span-2 md:justify-end">
-                <span className="hidden font-mono text-[0.66rem] text-ink-faint lg:inline">
-                  {p.technologies.slice(0, 2).map((t) => t.technology.name).join(" · ")}
+              <p className="text-[0.9375rem] leading-relaxed text-ink-muted md:col-span-4">{p.shortDescription}</p>
+              <div className="flex items-center justify-between gap-3 md:col-span-2 md:justify-end">
+                <span className="hidden lg:inline-flex">
+                  <Tag>{p.technologies.slice(0, 2).map((t) => t.technology.name).join(" · ")}</Tag>
                 </span>
-                <span className="ml-4 font-mono text-signal transition-transform group-hover:translate-x-1">→</span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-elevated text-accent-pink">
+                  <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
+                </span>
               </div>
             </Link>
           </ScrollReveal>
         ))}
         {projects.length === 0 ? (
-          <p className="py-16 text-center font-mono text-sm text-ink-faint">Belum ada proyek yang dipublikasikan.</p>
+          <p className="py-16 text-center text-[0.9375rem] text-ink-muted">Belum ada proyek yang dipublikasikan.</p>
         ) : null}
       </div>
     </div>

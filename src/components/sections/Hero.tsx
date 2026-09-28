@@ -1,83 +1,134 @@
+import Image from "next/image";
 import Link from "next/link";
+import { Activity, ArrowRight, Globe, LayoutDashboard, Plug } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { Boop } from "@/components/motion/Boop";
+import { Sparkles } from "@/components/motion/Sparkles";
 
 type HeroProps = {
   settings: Record<string, string>;
   stats: { projects: number; years: string };
 };
 
+const CAPABILITIES: { title: string; sub: string; icon: LucideIcon; tone: string }[] = [
+  { title: "Website", sub: "Perusahaan, B2B & landing", icon: Globe, tone: "text-accent-blue" },
+  { title: "Aplikasi bisnis", sub: "POS, inventory, dashboard", icon: LayoutDashboard, tone: "text-accent-pink" },
+  { title: "Integrasi", sub: "API, pembayaran, webhook", icon: Plug, tone: "text-accent-pink" },
+  { title: "Sistem operasional", sub: "Real-time & multi-outlet", icon: Activity, tone: "text-accent-blue" },
+];
+
 export function Hero({ settings, stats }: HeroProps) {
   return (
-    <section className="relative overflow-hidden border-b border-rule">
-      <div className="shell relative pb-16 pt-14 md:pb-24 md:pt-20">
-        {/* Top metadata rail — the "spec sheet" header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-rule pb-5">
-          <div className="flex items-center gap-3">
+    <section className="relative overflow-hidden">
+      <HeroBackdrop />
+
+      <div className="shell relative pb-16 pt-6 md:pb-28 md:pt-10">
+        {/* Metadata rail */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-[0.8125rem] text-ink-muted">
+          <div className="flex items-center gap-2.5">
             <span className="status-dot" aria-hidden />
             <span className="label">{settings["hero.availability"]}</span>
           </div>
-          <div className="flex items-center gap-6">
-            <span className="label hidden sm:inline">EST — {settings["contact.location"].split("—")[0].trim()}</span>
-            <span className="label-signal">{stats.projects.toString().padStart(2, "0")} proyek tercatat</span>
+          <div className="flex items-center gap-5">
+            <span className="label hidden sm:inline">
+              Berlokasi di {settings["contact.location"].split(",")[0].trim()}
+            </span>
+            <span className="label-signal">{stats.projects.toString().padStart(2, "0")} proyek</span>
           </div>
         </div>
 
-        {/* Positioning statement */}
-        <div className="grid grid-cols-1 gap-8 pt-12 md:grid-cols-12 md:pt-16">
-          <div className="md:col-span-1">
-            <p className="label rotate-0 md:[writing-mode:vertical-rl] md:rotate-180">
-              Positioning / 001
+        <div className="grid grid-cols-1 items-center gap-12 pt-12 md:pt-16 lg:grid-cols-12 lg:gap-10">
+          {/* Copy */}
+          <div className="lg:col-span-6">
+            <p className="mb-4 inline-block -rotate-2 font-hand text-[1.75rem] font-bold leading-none text-accent-pink md:text-[2rem]">
+              {settings["hero.kicker"]}
             </p>
-          </div>
-
-          <div className="md:col-span-11">
-            <p className="label-signal mb-6">{settings["hero.kicker"]}</p>
-            <h1 className="font-display text-[clamp(2.75rem,9vw,7.5rem)] font-bold leading-[0.94] tracking-[-0.02em]">
+            <h1 className="text-hero-sm text-ink sm:text-[3.25rem] sm:leading-[1.1] lg:text-hero">
               {settings["hero.line1"]}
               <br />
-              <span className="text-signal">{settings["hero.line2"]}</span>
+              <span className="text-accent-pink">
+                <Sparkles>{settings["hero.line2"]}</Sparkles>
+              </span>
             </h1>
-
-            <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-12">
-              <p className="max-w-2xl text-lg leading-relaxed text-ink-soft md:col-span-7 md:text-xl">
-                {settings["hero.statement"]}
-              </p>
-              <div className="md:col-span-5 md:justify-self-end">
-                <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-                  <Link
-                    href="/#work"
-                    className="group inline-flex items-center justify-between gap-6 bg-ink px-6 py-4 font-mono text-xs uppercase tracking-label text-paper transition-colors hover:bg-signal"
-                  >
-                    Lihat Karya Pilihan
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </Link>
-                  <Link
-                    href="/#contact"
-                    className="group inline-flex items-center justify-between gap-6 border border-ink px-6 py-4 font-mono text-xs uppercase tracking-label text-ink transition-colors hover:bg-ink hover:text-paper"
-                  >
-                    Mulai Proyek
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </Link>
-                </div>
-              </div>
+            <p className="mt-6 max-w-xl text-body text-ink-muted md:text-[1.25rem]">
+              {settings["hero.statement"]}
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link href="/#work" className="ui-btn ui-btn-secondary group">
+                Lihat Karya Pilihan
+                <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
+              </Link>
+              <Link href="/#contact" className="ui-btn ui-btn-primary group">
+                Mulai Proyek
+                <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
+              </Link>
             </div>
           </div>
-        </div>
 
-        {/* Bottom capability strip */}
-        <div className="mt-16 grid grid-cols-2 gap-px border border-rule bg-rule md:mt-24 md:grid-cols-4">
-          {[
-            ["Website", "Perusahaan, B2B & landing"],
-            ["Aplikasi bisnis", "POS, inventory, dashboard"],
-            ["Integrasi", "API, pembayaran, webhook"],
-            ["Sistem operasional", "Real-time & multi-outlet"],
-          ].map(([title, sub]) => (
-            <div key={title} className="bg-paper p-5">
-              <p className="font-display text-base font-semibold">{title}</p>
-              <p className="mt-1 font-mono text-[0.68rem] leading-relaxed text-ink-faint">{sub}</p>
+          {/* Visual: the four things I build, drawn as one connected system,
+              with the mascot standing beside it. */}
+          <div className="relative pb-28 lg:col-span-6 lg:pb-0 lg:pl-28">
+            <div className="relative mx-auto max-w-md rounded-[1.5rem] bg-panel p-2.5 shadow-lift lg:ml-auto lg:rotate-[1.5deg]">
+              <div className="relative grid grid-cols-2 gap-3 rounded-[1.125rem] bg-canvas p-3 pb-6 sm:gap-4 sm:p-5 sm:pb-8">
+                {/* connectors to the hub */}
+                <span className="absolute left-1/2 top-6 h-[calc(100%-3rem)] w-px -translate-x-1/2 border-l border-dashed border-line" aria-hidden />
+                <span className="absolute left-6 top-1/2 h-px w-[calc(100%-3rem)] -translate-y-1/2 border-t border-dashed border-line" aria-hidden />
+                <span
+                  className="absolute left-1/2 top-1/2 z-10 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-panel shadow-lift"
+                  aria-hidden
+                >
+                  <span className="status-dot" />
+                </span>
+
+                {CAPABILITIES.map(({ title, sub, icon: Icon, tone }, i) => (
+                  <div key={title} className={i % 2 === 1 ? "translate-y-3" : ""}>
+                    <div data-boop className="ui-card relative h-full rounded-card bg-surface p-4 shadow-card hover:-translate-y-1 hover:shadow-card-hover sm:p-5">
+                      <Boop trigger="parent" rotation={i % 2 ? -12 : 12}>
+                        <Icon className={`h-5 w-5 ${tone}`} strokeWidth={2} />
+                      </Boop>
+                      <p className="mt-4 text-[0.9375rem] font-semibold leading-snug text-ink sm:text-base">{title}</p>
+                      <p className="mt-1 text-[0.8125rem] leading-snug text-ink-muted">{sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+            <Boop
+              rotation={-6}
+              y={-6}
+              className="absolute -bottom-2 right-2 z-20 w-24 sm:w-28 lg:bottom-[-2.5rem] lg:-left-6 lg:right-auto lg:w-40"
+            >
+              <Image
+                src="/mascot/hero.webp"
+                alt=""
+                width={346}
+                height={603}
+                priority
+                sizes="(min-width: 1024px) 160px, 112px"
+                className="h-auto w-full drop-shadow-[0_18px_24px_rgb(0_0_0/0.35)]"
+              />
+            </Boop>
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+// Soft, low-contrast shapes behind the hero — layered surfaces, no glow.
+function HeroBackdrop() {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-0" aria-hidden>
+      <div className="absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-surface/60" />
+      <div className="absolute -right-10 top-48 h-64 w-64 rounded-full bg-accent-pink/[0.06]" />
+      <svg
+        className="absolute inset-x-0 bottom-0 h-24 w-full text-surface/50 md:h-32"
+        viewBox="0 0 1440 128"
+        preserveAspectRatio="none"
+        fill="currentColor"
+      >
+        <path d="M0 96c120-40 240-56 360-40s220 52 360 44 220-64 360-72 240 28 360 52v48H0z" />
+      </svg>
+    </div>
   );
 }

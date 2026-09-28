@@ -25,6 +25,8 @@
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "jose": "^5.9.6",
+    "lucide-react": "^1.48.0",
+    "motion": "^13.4.4",
     "next": "15.1.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -38,6 +40,7 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "prisma": "^6.2.1",
+    "puppeteer-core": "^23.11.1",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"

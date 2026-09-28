@@ -29,7 +29,7 @@ export default async function MessagesPage({
 
   return (
     <div>
-      <div className="border-b border-console-line pb-6">
+      <div className="border-b border-rule pb-6">
         <p className="font-mono text-[0.66rem] uppercase tracking-label text-signal">Enquiries</p>
         <h1 className="mt-2 font-display text-3xl font-bold">Messages</h1>
       </div>
@@ -40,7 +40,7 @@ export default async function MessagesPage({
             key={f.key}
             href={`/admin/messages?filter=${f.key}`}
             className={`px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-label transition-colors ${
-              filter === f.key ? "bg-console-2 text-paper" : "text-paper/40 hover:text-paper"
+              filter === f.key ? "bg-surface-2 text-ink" : "text-ink-faint hover:text-ink"
             }`}
           >
             {f.label}
@@ -53,7 +53,7 @@ export default async function MessagesPage({
           <MessageCard key={m.id} m={m} />
         ))}
         {messages.length === 0 ? (
-          <p className="border border-console-line bg-console px-4 py-12 text-center font-mono text-xs text-paper/40">
+          <p className="border border-rule bg-white px-4 py-12 text-center font-mono text-xs text-ink-faint">
             No messages here.
           </p>
         ) : null}

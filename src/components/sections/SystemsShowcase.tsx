@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { ArrowRight, Check } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
-import { SectionHeader } from "@/components/sections/SelectedWork";
+import { Section, SectionHeader } from "@/components/ui/Section";
 
 // Home-page architecture teaser built from the flagship project's schematic.
 export function SystemsShowcase({
@@ -16,46 +17,42 @@ export function SystemsShowcase({
   if (!architectureText) return null;
 
   return (
-    <section className="border-b border-rule bg-paper-dim/40">
-      <div className="shell py-16 md:py-24">
-        <SectionHeader index="003" title="Bagaimana Sistemnya Terhubung" note="Skema unggulan" />
-        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-12">
-          <ScrollReveal className="md:col-span-5">
-            <p className="label-signal">{title}</p>
-            <p className="mt-4 text-lg leading-relaxed text-ink-soft">
-              Software bisnis nyata sebagian besar soal koneksi — antara lantai toko, database,
-              penyedia pembayaran, dan orang-orang yang menjalankan operasional. Inilah bentuk build
-              unggulannya: sebuah POS yang mengoordinasikan penjualan, inventory, dan perangkat,
-              berkomunikasi dengan central services yang menangani pembayaran, integrasi, dan pesan
-              real-time.
-            </p>
-            <ul className="mt-8 space-y-3">
-              {[
-                "Satu sumber kebenaran di PostgreSQL",
-                "Sinkronisasi perangkat real-time lewat WebSocket",
-                "Event pembayaran dibuat idempotent & terverifikasi",
-                "Reporting dipisah dari jalur penjualan",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-signal" aria-hidden />
-                  <span className="text-sm text-ink-soft">{item}</span>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href={`/work/${slug}`}
-              className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-label text-signal"
-            >
-              <span className="link-underline">Baca Case Study Engineering-nya</span>
-              <span>→</span>
-            </Link>
-          </ScrollReveal>
+    <Section>
+      <SectionHeader index="004" title="Bagaimana Sistem Ini Terhubung" note="Skema unggulan" />
+      <div className="mt-10 grid grid-cols-1 gap-10 md:mt-12 lg:grid-cols-12 lg:gap-12">
+        <ScrollReveal className="lg:col-span-5">
+          <p className="label-signal">{title}</p>
+          <p className="mt-4 text-body text-ink-muted">
+            Software bisnis itu intinya soal koneksi, antara lantai toko, database, penyedia
+            pembayaran, sampai orang-orang yang menjalankan operasional sehari-hari. Contohnya ada
+            di proyek ini: POS yang mengatur penjualan, inventory, dan perangkat di lapangan, lalu
+            terhubung ke layanan pusat yang menangani pembayaran, integrasi, dan pesan real-time.
+          </p>
+          <ul className="mt-8 space-y-3">
+            {[
+              "Satu sumber kebenaran di PostgreSQL",
+              "Sinkronisasi perangkat real-time lewat WebSocket",
+              "Event pembayaran dibuat idempotent & terverifikasi",
+              "Reporting dipisah dari jalur penjualan",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-surface-elevated" aria-hidden>
+                  <Check className="h-3 w-3 text-accent-pink" strokeWidth={3} />
+                </span>
+                <span className="text-[0.9375rem] text-ink">{item}</span>
+              </li>
+            ))}
+          </ul>
+          <Link href={`/work/${slug}`} className="ui-link group mt-8">
+            <span className="link-underline">Baca Case Study Engineering-nya</span>
+            <ArrowRight className="nudge-x h-4 w-4" strokeWidth={2.25} aria-hidden />
+          </Link>
+        </ScrollReveal>
 
-          <ScrollReveal className="md:col-span-7" delay={100}>
-            <ArchitectureDiagram text={architectureText} />
-          </ScrollReveal>
-        </div>
+        <ScrollReveal className="lg:col-span-7" delay={80}>
+          <ArchitectureDiagram text={architectureText} />
+        </ScrollReveal>
       </div>
-    </section>
+    </Section>
   );
 }

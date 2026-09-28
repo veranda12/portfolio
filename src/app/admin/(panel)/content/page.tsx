@@ -10,6 +10,7 @@ const GROUPS: { title: string; fields: { key: string; label: string; area?: bool
     title: "Identity",
     fields: [
       { key: "site.name", label: "Site name (nav)" },
+      { key: "site.owner", label: "Owner name (footer & contact)" },
       { key: "site.role", label: "Role (footer)" },
     ],
   },
@@ -40,6 +41,9 @@ const GROUPS: { title: string; fields: { key: string; label: string; area?: bool
       { key: "contact.body", label: "Body", area: true },
       { key: "contact.email", label: "Public email" },
       { key: "contact.location", label: "Location" },
+      { key: "contact.whatsapp", label: "WhatsApp number (digits only, e.g. 6281234567890 — empty = hidden)" },
+      { key: "contact.whatsappText", label: "WhatsApp prefilled message" },
+      { key: "contact.consultation", label: "Consultation line" },
     ],
   },
   {
@@ -49,7 +53,7 @@ const GROUPS: { title: string; fields: { key: string; label: string; area?: bool
 ];
 
 const inputCls =
-  "w-full border border-console-line bg-console-2 px-3 py-2.5 text-sm text-paper placeholder:text-paper/25 focus:border-signal focus:outline-none";
+  "w-full border border-rule bg-surface-2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-signal focus:outline-none";
 
 export default async function ContentPage() {
   const [settings, links] = await Promise.all([
@@ -59,22 +63,22 @@ export default async function ContentPage() {
 
   return (
     <div>
-      <div className="border-b border-console-line pb-6">
+      <div className="border-b border-rule pb-6">
         <p className="font-mono text-[0.66rem] uppercase tracking-label text-signal">Content</p>
         <h1 className="mt-2 font-display text-3xl font-bold">Site content</h1>
-        <p className="mt-2 font-mono text-[0.66rem] text-paper/40">
+        <p className="mt-2 font-mono text-[0.66rem] text-ink-faint">
           Editorial copy for the public site. Changes publish immediately.
         </p>
       </div>
 
       <form action={updateSettings} className="mt-6 space-y-8">
         {GROUPS.map((g) => (
-          <fieldset key={g.title} className="border border-console-line bg-console p-5">
+          <fieldset key={g.title} className="border border-rule bg-white p-5">
             <legend className="px-2 font-mono text-[0.66rem] uppercase tracking-label text-signal">{g.title}</legend>
             <div className="space-y-4">
               {g.fields.map((f) => (
                 <div key={f.key}>
-                  <label className="mb-1.5 block font-mono text-[0.62rem] uppercase tracking-label text-paper/60">
+                  <label className="mb-1.5 block font-mono text-[0.62rem] uppercase tracking-label text-ink-soft">
                     {f.label}
                   </label>
                   {f.area ? (
@@ -93,9 +97,9 @@ export default async function ContentPage() {
         </div>
       </form>
 
-      <div className="mt-10 border-t border-console-line pt-8">
+      <div className="mt-10 border-t border-rule pt-8">
         <p className="font-mono text-[0.66rem] uppercase tracking-label text-signal">Social links</p>
-        <p className="mt-1 font-mono text-[0.62rem] text-paper/40">Shown in the footer.</p>
+        <p className="mt-1 font-mono text-[0.62rem] text-ink-faint">Shown in the footer.</p>
         <div className="mt-4">
           <SocialLinksManager links={links} />
         </div>

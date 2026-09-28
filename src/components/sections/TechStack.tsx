@@ -1,5 +1,10 @@
+import { Cable, Database, Layers, Server } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { SectionHeader } from "@/components/sections/SelectedWork";
+import { Boop } from "@/components/motion/Boop";
+import { Section, SectionHeader } from "@/components/ui/Section";
+import { Tag } from "@/components/ui/Card";
+import { cn } from "@/lib/cn";
 
 type Group = { category: string; items: string[] };
 
@@ -10,35 +15,55 @@ const CAPTIONS: Record<string, string> = {
   Infrastructure: "Tempat semuanya berjalan di produksi",
 };
 
+const ICONS: Record<string, LucideIcon> = {
+  Application: Layers,
+  Data: Database,
+  Integration: Cable,
+  Infrastructure: Server,
+};
+const SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7"];
+
 // Grouped by capability, not a logo wall. Secondary to the work.
 export function TechStack({ groups }: { groups: Group[] }) {
   return (
-    <section id="stack" className="scroll-mt-16 border-b border-rule">
-      <div className="shell py-16 md:py-24">
-        <SectionHeader index="006" title="Stack" note="Dikelompokkan per kapabilitas" />
+    <Section id="stack">
+      <SectionHeader index="009" title="Stack" note="Dikelompokkan per kapabilitas" />
 
-        <div className="mt-12 grid grid-cols-1 gap-px border border-rule bg-rule md:grid-cols-2 lg:grid-cols-4">
-          {groups.map((g, i) => (
-            <ScrollReveal key={g.category} className="bg-paper p-6 md:p-8" delay={i * 60}>
-              <div className="flex items-baseline justify-between">
-                <h3 className="font-display text-lg font-semibold">{g.category}</h3>
-                <span className="font-mono text-[0.66rem] text-ink-faint">{String(g.items.length).padStart(2, "0")}</span>
+      <div className="mt-10 grid grid-cols-1 gap-4 md:mt-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
+        {groups.map((g, i) => {
+          const Icon = ICONS[g.category] ?? Layers;
+          return (
+            <ScrollReveal
+              boop
+              key={g.category}
+              className={cn("ui-card rounded-card bg-surface p-6 shadow-card md:p-7", SPANS[i % SPANS.length])}
+              delay={(i % 2) * 70}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-card bg-surface-elevated" aria-hidden>
+                    <Boop trigger="parent" rotation={i % 2 ? -12 : 12}>
+                      <Icon className={cn("h-5 w-5", i % 2 ? "text-accent-blue" : "text-accent-pink")} />
+                    </Boop>
+                  </span>
+                  <h3 className="text-[1.125rem] font-bold text-ink">{g.category}</h3>
+                </div>
+                <span className="text-[0.8125rem] font-semibold text-ink-muted">
+                  {String(g.items.length).padStart(2, "0")}
+                </span>
               </div>
-              <p className="mt-1 font-mono text-[0.66rem] leading-relaxed text-ink-faint">
-                {CAPTIONS[g.category] ?? ""}
-              </p>
-              <ul className="mt-5 space-y-2.5">
+              <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-muted">{CAPTIONS[g.category] ?? ""}</p>
+              <ul className="mt-5 flex flex-wrap gap-1.5">
                 {g.items.map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-sm text-ink-soft">
-                    <span className="h-1 w-1 shrink-0 bg-signal" aria-hidden />
-                    {item}
+                  <li key={item}>
+                    <Tag className="text-ink">{item}</Tag>
                   </li>
                 ))}
               </ul>
             </ScrollReveal>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    </section>
+    </Section>
   );
 }

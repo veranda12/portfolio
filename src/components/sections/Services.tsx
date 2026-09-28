@@ -1,5 +1,6 @@
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { SectionHeader } from "@/components/sections/SelectedWork";
+import { Section, SectionHeader } from "@/components/ui/Section";
+import { Tag } from "@/components/ui/Card";
 
 type Service = {
   id: string;
@@ -8,43 +9,42 @@ type Service = {
   deliverables: string;
 };
 
-// Not a pricing table — a capability ledger. Each row expands on hover/focus.
+// Not a pricing table — a capability ledger: one tactile row per service on
+// a single surface panel, rows separated by background, not borders.
 export function Services({ services }: { services: Service[] }) {
   return (
-    <section id="services" className="scroll-mt-16 border-b border-rule">
-      <div className="shell py-16 md:py-24">
-        <SectionHeader index="004" title="Yang Saya Bangun" note="Layanan" />
+    <Section id="services" tone="surface">
+      <SectionHeader index="005" title="Yang Saya Bangun" note="Layanan" />
 
-        <div className="mt-12 border-t border-rule">
-          {services.map((s, i) => {
-            const deliverables = s.deliverables.split("\n").map((d) => d.trim()).filter(Boolean);
-            return (
-              <ScrollReveal key={s.id}>
-                <div className="group grid grid-cols-1 gap-6 border-b border-rule py-8 transition-colors hover:bg-paper-dim/50 md:grid-cols-12 md:py-10">
-                  <div className="flex items-start gap-5 md:col-span-5">
-                    <span className="font-mono text-sm text-signal">{String(i + 1).padStart(2, "0")}</span>
-                    <h3 className="font-display text-2xl font-semibold leading-tight md:text-3xl">
-                      {s.title}
-                    </h3>
-                  </div>
-                  <div className="md:col-span-4">
-                    <p className="text-base leading-relaxed text-ink-soft">{s.summary}</p>
-                  </div>
-                  <div className="md:col-span-3">
-                    <ul className="flex flex-wrap gap-x-4 gap-y-1.5 md:flex-col md:gap-1.5">
-                      {deliverables.map((d) => (
-                        <li key={d} className="font-mono text-[0.72rem] text-ink-faint">
-                          <span className="text-signal">—</span> {d}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+      <div className="mt-10 flex flex-col gap-3 md:mt-12">
+        {services.map((s, i) => {
+          const deliverables = s.deliverables.split("\n").map((d) => d.trim()).filter(Boolean);
+          return (
+            <ScrollReveal key={s.id}>
+              <div className="ui-card group grid grid-cols-1 gap-5 rounded-card bg-canvas/60 p-6 hover:bg-canvas md:grid-cols-12 md:gap-8 md:p-8">
+                <div className="flex items-start gap-5 md:col-span-5">
+                  <span className="mt-1.5 text-[0.8125rem] font-semibold text-accent-pink">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="text-[1.5rem] font-bold leading-tight text-ink md:text-[1.75rem]">{s.title}</h3>
                 </div>
-              </ScrollReveal>
-            );
-          })}
-        </div>
+                <div className="md:col-span-4">
+                  <p className="text-body text-ink-muted">{s.summary}</p>
+                </div>
+                <div className="md:col-span-3">
+                  <ul className="flex flex-wrap gap-1.5">
+                    {deliverables.map((d) => (
+                      <li key={d}>
+                        <Tag>{d}</Tag>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </ScrollReveal>
+          );
+        })}
       </div>
-    </section>
+    </Section>
   );
 }

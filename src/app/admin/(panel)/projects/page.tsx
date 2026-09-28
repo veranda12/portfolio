@@ -19,39 +19,39 @@ export default async function AdminProjectsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-console-line pb-6">
+      <div className="flex items-center justify-between border-b border-rule pb-6">
         <div>
           <p className="font-mono text-[0.66rem] uppercase tracking-label text-signal">Content</p>
           <h1 className="mt-2 font-display text-3xl font-bold">Projects</h1>
         </div>
         <Link
           href="/admin/projects/new"
-          className="inline-flex items-center gap-2 bg-signal px-5 py-3 font-mono text-xs uppercase tracking-label text-paper hover:opacity-90"
+          className="inline-flex items-center gap-2 bg-signal px-5 py-3 font-mono text-xs uppercase tracking-label text-white hover:opacity-90"
         >
           + New
         </Link>
       </div>
 
-      <p className="mt-4 font-mono text-[0.66rem] text-paper/40">
+      <p className="mt-4 font-mono text-[0.66rem] text-ink-faint">
         {projects.length} project{projects.length !== 1 ? "s" : ""} · order controls the public
         listing sequence
       </p>
 
-      <div className="mt-4 divide-y divide-console-line border border-console-line">
+      <div className="mt-4 divide-y divide-rule border border-rule">
         {projects.map((p, i) => (
-          <div key={p.id} className="flex flex-col gap-3 bg-console px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div key={p.id} className="flex flex-col gap-3 bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-baseline gap-3">
-              <span className="font-mono text-xs text-paper/30">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-mono text-xs text-ink-faint">{String(i + 1).padStart(2, "0")}</span>
               <div className="min-w-0">
                 <Link
                   href={`/admin/projects/${p.id}`}
-                  className="block truncate font-display text-base font-semibold text-paper hover:text-signal"
+                  className="block truncate font-display text-base font-semibold text-ink hover:text-signal"
                 >
                   {p.title}
                 </Link>
-                <p className="font-mono text-[0.62rem] text-paper/40">
-                  {p.projectType} · {p.year} · <span className="text-paper/30">{p.layout}</span> ·{" "}
-                  <span className="text-paper/30">/{p.slug}</span>
+                <p className="font-mono text-[0.62rem] text-ink-faint">
+                  {p.projectType} · {p.year} · <span className="text-ink-faint">{p.layout}</span> ·{" "}
+                  <span className="text-ink-faint">/{p.slug}</span>
                 </p>
               </div>
             </div>
@@ -65,7 +65,7 @@ export default async function AdminProjectsPage() {
               />
               <Link
                 href={`/admin/projects/${p.id}`}
-                className="border border-console-line px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-label text-paper/70 hover:border-signal hover:text-paper"
+                className="border border-rule px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-label text-ink-soft hover:border-signal hover:text-ink"
               >
                 Edit
               </Link>
@@ -73,7 +73,7 @@ export default async function AdminProjectsPage() {
           </div>
         ))}
         {projects.length === 0 ? (
-          <p className="bg-console px-4 py-10 text-center font-mono text-xs text-paper/40">
+          <p className="bg-white px-4 py-10 text-center font-mono text-xs text-ink-faint">
             No projects yet.{" "}
             <Link href="/admin/projects/new" className="text-signal">
               Create the first →

@@ -27,7 +27,7 @@ export function ProjectRowActions({
         title={published ? "Unpublish" : "Publish"}
         className={cn(
           "px-2 py-1 font-mono text-[0.6rem] uppercase tracking-label transition-colors",
-          published ? "bg-signal/15 text-signal hover:bg-signal/25" : "bg-console-2 text-paper/50 hover:text-paper"
+          published ? "bg-signal/15 text-signal hover:bg-signal/25" : "bg-surface-2 text-ink-faint hover:text-ink"
         )}
       >
         {published ? "Live" : "Draft"}
@@ -38,7 +38,7 @@ export function ProjectRowActions({
         title={featured ? "Unfeature" : "Feature"}
         className={cn(
           "px-2 py-1 font-mono text-[0.6rem] uppercase tracking-label transition-colors",
-          featured ? "bg-paper/15 text-paper" : "bg-console-2 text-paper/40 hover:text-paper"
+          featured ? "bg-ink/10 text-ink" : "bg-surface-2 text-ink-faint hover:text-ink"
         )}
       >
         ★
@@ -48,7 +48,7 @@ export function ProjectRowActions({
           type="button"
           disabled={isFirst}
           onClick={() => start(() => moveProject(id, "up"))}
-          className="px-1.5 font-mono text-[0.6rem] text-paper/50 hover:text-signal disabled:opacity-20"
+          className="px-1.5 font-mono text-[0.6rem] text-ink-faint hover:text-signal disabled:opacity-20"
           title="Move up"
         >
           ▲
@@ -57,7 +57,7 @@ export function ProjectRowActions({
           type="button"
           disabled={isLast}
           onClick={() => start(() => moveProject(id, "down"))}
-          className="px-1.5 font-mono text-[0.6rem] text-paper/50 hover:text-signal disabled:opacity-20"
+          className="px-1.5 font-mono text-[0.6rem] text-ink-faint hover:text-signal disabled:opacity-20"
           title="Move down"
         >
           ▼

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { display, body, mono } from "@/lib/fonts";
+import { hand, sans } from "@/lib/fonts";
+import { MotionProvider } from "@/components/motion/MotionProvider";
+import { RouteProgress } from "@/components/RouteProgress";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -7,11 +10,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Full-Stack Developer — Software untuk bisnis nyata",
-    template: "%s — Full-Stack Developer",
+    default: "RenCodes · Full-Stack Developer",
+    template: "%s · Deni Maulana Shobri",
   },
   description:
-    "Full-Stack Developer yang membangun website, aplikasi bisnis, integrasi, dan sistem operasional untuk bisnis nyata. Java, Spring Boot, Next.js, React, TypeScript, PostgreSQL.",
+    "Full-stack developer yang membangun website, aplikasi bisnis, integrasi, dan sistem operasional untuk bisnis nyata. Java, Spring Boot, Next.js, React, TypeScript, PostgreSQL.",
   keywords: [
     "full stack developer Indonesia",
     "jasa pembuatan aplikasi bisnis",
@@ -25,10 +28,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Full-Stack Developer — Software untuk bisnis nyata",
+    title: "RenCodes · Full-Stack Developer",
     description:
       "Website, aplikasi bisnis, integrasi, dan sistem operasional untuk bisnis nyata.",
-    siteName: "Studio",
+    siteName: "RenCodes",
     locale: "id_ID",
   },
   robots: { index: true, follow: true },
@@ -36,8 +39,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${body.variable} ${display.variable} ${mono.variable}`}>
-      <body>{children}</body>
+    // data-theme is set by the inline script before hydration.
+    <html lang="id" className={`${sans.variable} ${hand.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body>
+        <RouteProgress />
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }
