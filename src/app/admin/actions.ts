@@ -34,6 +34,9 @@ export async function logoutAction(): Promise<void> {
 function revalidateProject(slug?: string) {
   revalidatePath("/");
   revalidatePath("/work");
+  // Capabilities links to projects by title; every case study lists related work.
+  revalidatePath("/capabilities");
+  revalidatePath("/work/[slug]", "page");
   revalidatePath("/admin/projects");
   revalidatePath("/sitemap.xml");
   if (slug) revalidatePath(`/work/${slug}`);
@@ -152,7 +155,7 @@ export async function deleteProject(id: string): Promise<void> {
   const project = await prisma.project.findUnique({ where: { id }, include: { images: true } });
   if (project) {
     const storage = getStorage();
-    // best-effort cleanup of local files
+    // best-effort cleanup of stored files (local or Blob)
     const urls = [project.featuredImage, project.architectureImage, project.ogImage, ...project.images.map((i) => i.url)]
       .filter((u): u is string => Boolean(u));
     for (const url of urls) {
@@ -261,7 +264,7 @@ export async function updateSettings(formData: FormData): Promise<void> {
       create: { key, value: String(v) },
     });
   }
-  revalidatePath("/");
+  revalidatePath("/", "layout"); // nav + footer appear on every page
   revalidatePath("/admin/content");
 }
 
@@ -277,13 +280,13 @@ export async function saveSocialLink(formData: FormData): Promise<void> {
   if (!data.label || !data.url) return;
   if (id) await prisma.socialLink.update({ where: { id }, data });
   else await prisma.socialLink.create({ data });
-  revalidatePath("/");
+  revalidatePath("/", "layout"); // nav + footer appear on every page
   revalidatePath("/admin/content");
 }
 
 export async function deleteSocialLink(id: string): Promise<void> {
   await requireAdmin();
   await prisma.socialLink.delete({ where: { id } });
-  revalidatePath("/");
+  revalidatePath("/", "layout"); // nav + footer appear on every page
   revalidatePath("/admin/content");
 }
