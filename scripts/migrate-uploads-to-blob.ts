@@ -7,8 +7,11 @@
  *
  *   $env:DATABASE_URL = "<Neon DATABASE_URL_UNPOOLED>"
  *   $env:BLOB_READ_WRITE_TOKEN = "<token from Vercel>"
- *   npm run blob:migrate -- --dry     # show the plan, change nothing
+ *   npm run blob:migrate:check        # show the plan, change nothing
  *   npm run blob:migrate              # upload + rewrite
+ *
+ * (Use the separate :check script rather than `-- --dry`: PowerShell drops
+ * the `--`, so npm would swallow the flag and the real migration would run.)
  *
  * Safe to re-run: rows already pointing at Blob are left alone, and uploads
  * overwrite the same pathname instead of creating duplicates.
