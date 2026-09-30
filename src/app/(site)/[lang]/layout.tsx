@@ -8,9 +8,6 @@ import { getSettings } from "@/lib/content";
 import { siteUrl } from "@/lib/site-url";
 import { getDictionary, isLocale, locales, ogLocale, type Locale } from "@/i18n";
 
-// Root layout of the public site. Indonesian is served at "/" (the middleware
-// rewrites it to /id internally), English at "/en".
-export const dynamicParams = false;
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
